@@ -116,21 +116,22 @@ void ShowParamValues(TreeParams *parameters)
 	{
 		if (verbosity == 2)
 		{
-			printf(	"   speciation rate, region A:  %f\n"
-					"   speciation rate, region B:  %f\n"
-					"   extinction rate, region A:  %f\n"
-					"   extinction rate, region B:  %f\n"
-					"   dispersal rate, A -> B   :  %f\n"
-					"   dispersal rate, B -> A   :  %f\n"
-					"   time to grow tree        :  %f\n",
-				parameters->birth[0], parameters->birth[1], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
+			printf(	"   speciation rate, region A :  %f\n"
+					"   speciation rate, region B :  %f\n"
+					"   allopatric speciation rate:  %f\n"
+					"   extinction rate, region A :  %f\n"
+					"   extinction rate, region B :  %f\n"
+					"   dispersal rate, A -> B    :  %f\n"
+					"   dispersal rate, B -> A    :  %f\n"
+					"   time to grow tree         :  %f\n",
+				parameters->birth[0], parameters->birth[1], parameters->birth[2], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
 		}
 
 		else if (verbosity == 1)
 		{
 			printf( "   birth, death, dispersal; end_t:\n"
-					"   %f %f %f %f %f %f %f\n", 
-					parameters->birth[0], parameters->birth[1], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
+					"   %f %f %f, %f %f, %f %f, %f\n", 
+					parameters->birth[0], parameters->birth[1], parameters->birth[2], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
 		}
 	}
 }

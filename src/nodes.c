@@ -24,9 +24,7 @@ TreeNode *NewNode(TreeNode *ancestor, double t)
 	p->left = NULL;	// will be assigned if there are descendents
 	p->right = NULL;	// will be assigned if there are descendents
 	p->index = -1;		// will assign this later
-	p->trait = 9;		// will assign this later
-	p->cl[0] = 0;
-	p->cl[1] = 0;
+	p->trait = -1;		// will assign this later
 
 	return p;
 }
@@ -50,34 +48,6 @@ void FreeTree(TreeNode *p)
 	{
 		FreeTree(p->left);
 		FreeTree(p->right);
-		free(p);
-	}
-}
-
-/*******************************************************************************
- * broken-branch information
- ******************************************************************************/
-
-// make a new branch-node structure
-BranchNode *NewBranchNode()
-{
-	BranchNode *p;
-	p = (BranchNode *) malloc(sizeof(BranchNode));
-	return p;
-}
-
-// free a branch-node
-void FreeBranchNode(BranchNode *p)
-{
-	free(p);
-}
-
-// free a broken branch
-void FreeBranch(BranchNode *p)
-{
-	if (p != NULL)
-	{
-		FreeBranch(p->next);
 		free(p);
 	}
 }

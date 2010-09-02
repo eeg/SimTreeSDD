@@ -63,6 +63,13 @@ int AcquireTreeParams(struct KeyValue *kv, TreeParams *parameters)
 		return -1;
 	}
 
+	// allopatric speciation (not mandatory)
+	parameters->birth[2] = getKeyValuedouble(kv, "birthAB");
+	if (parameters->birth[2] == KV_FLOATERR)
+	{
+		parameters->birth[2] = 0;
+	}
+
 	parameters->death[0] = getKeyValuedouble(kv, "death0");
 	if (parameters->death[0] == KV_FLOATERR)
 	{
@@ -146,12 +153,12 @@ int AcquireTreeParams(struct KeyValue *kv, TreeParams *parameters)
 	else
 		parameters->min_two_states = 1;
 	
-	// default is to create newick file
+	// default is not to create newick file
 	parameters->write_newick = getKeyValueint(kv, "write_newick");
-	if (parameters->write_newick > 0 || parameters->write_newick == KV_INTERR)
-		parameters->write_newick = 1;
-	else
+	if (parameters->write_newick <= 0 || parameters->write_newick == KV_INTERR)
 		parameters->write_newick = 0;
+	else
+		parameters->write_newick = 1;
 	
 	// default is to create nexus file
 	parameters->write_nexus = getKeyValueint(kv, "write_nexus");

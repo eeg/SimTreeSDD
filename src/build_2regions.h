@@ -1,5 +1,5 @@
 /*******************************************************************************
- * these functions are for creating a simulated birth-death-dispersal tree
+ * for building a two-region tree
  ******************************************************************************/
 
 #ifndef __BUILDREGION_H__
@@ -9,7 +9,7 @@
 #include "input_sim.h"
 #include "nodes.h"
 
-extern int node_counter;			// defined in build.c
+extern int node_counter;			// defined in build_common.c
 
 void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where, int direction, TreeParams *parameters);
 void BackUp2Regions(TreeNode *root, TreeNode *here, TreeParams *parameters);

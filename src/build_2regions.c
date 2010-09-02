@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "build.h"
+#include "build_common.h"
 #include "build_2regions.h"
 #include "input_sim.h"
 #include "output.h"
@@ -18,10 +18,18 @@ extern int node_counter;			// keep track of number of nodes in the tree
  *   for a tip, trait is the location in which it is now (0, 1, or 2)
  ***/
 
+/***
+ * reminder about state values:
+ *    0 = both regions
+ *    1 = region A
+ *    2 = region B
+ ***/
+
 /******************************************************************************
  * this does the hard work in building the tree
  *****************************************************************************/
-void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where, int direction, TreeParams *parameters)
+void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where, 
+		int direction, TreeParams *parameters)
 {
 	double wait_t;
 	TreeNode *temp;
@@ -66,15 +74,37 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where, int direction
 		if (todo == 0)
 			BirthDeath2Regions(root, here, here->trait, ++direction, parameters);
 
+		/* if there was no birth or death before reaching the stopping time */
+		else if (todo == 4)
+		{
+			temp = NewNode(here, parameters->end_t);
+			temp->trait = where;
+			node_counter++;
+
+			if (direction == 0)
+				here->left = temp;
+			else
+				here->right = temp;
+
+			BirthDeath2Regions(root, here, here->trait, ++direction, parameters);
+		}
+
 		/*****
 		 * If speciation occurred along that branch, add the new node and 
 		 *    continue to the left from it. 
 		 *****/
-		else if (todo == 1 || todo == 2)
+		else
 		{
 			temp = NewNode(here, (here->time)+wait_t);
-			temp->trait = todo;
 			node_counter++;
+
+			if (todo == 3)
+			{
+				temp->trait = 1;
+				where = 2;
+			}
+			else	// todo = 1 or 2
+				temp->trait = todo;
 			/*****
 			 * NOTE: that is why BirthDeath2Regions needs a location argument: 
 			 *       the parent/left species may be in both locations, 
@@ -93,22 +123,6 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where, int direction
 			}
 			
 			BirthDeath2Regions(root, here, where, 0, parameters);
-		}
-
-		/* if there was no birth or death before reaching the stopping time */
-		else if (todo == 3)
-		{
-			temp = NewNode(here, parameters->end_t);
-			temp->trait = where;
-			node_counter++;
-
-			if (direction == 0)
-				here->left = temp;
-			else
-				here->right = temp;
-//printf("reached end_t, tip loc=%d\n", temp->trait);
-
-			BirthDeath2Regions(root, here, here->trait, ++direction, parameters);
 		}
 	}
 }
@@ -183,34 +197,38 @@ void BackUp2Regions(TreeNode *root, TreeNode *here, TreeParams *parameters)
  *       0: global extinction (species is no longer in either region)
  *       1: speciation in region 1
  *       2: speciation in region 2
- *       3: reached end_t
+ *       3: allopatric speciation
+ *       4: reached end_t
  *****************************************************************************/
 int Wait2RegionEvent(int *where, double now, double *wait_t, TreeParams *parameters)
 {
 	double which;
 	double s1 = parameters->birth[0];
 	double s2 = parameters->birth[1];
+	double s12 = parameters->birth[2];
 	double x1 = parameters->death[0];
 	double x2 = parameters->death[1];
 	double d1 = parameters->transition[0];
 	double d2 = parameters->transition[1];
-	double wait_rate[3] = {s1+s2+x1+x2, s1+x1+d1, s2+x2+d2};
+	double wait_rate[3] = {s1+s2+s12+x1+x2, s1+x1+d1, s2+x2+d2};
 
 	for (;;)
 	{
 		*wait_t += exponential_distribution(wait_rate[*where]);
 
 		if (*wait_t + now > parameters->end_t)
-			return 3;
+			return 4;
 		
 		else if (*where == 0)			// if it's at both places
 		{
-			which = uniform_distribution(0, s1+s2+x1+x2);
+			which = uniform_distribution(0, wait_rate[0]);
 			if (which < s1)			// speciation in region 1
 				return 1;
 			else if (which < s1+s2)		// speciation in region 2
 				return 2;
-			else if (which < s1+s2+x1)	// extinction in region 1...
+			else if (which < s1+s2+s12)	// allopatric speciation
+				return 3;
+			else if (which < s1+s2+s12+x1)// extinction in region 1...
 				*where = 2;			// ...and continue waiting
 			else 					// extinction in region 2...
 				*where = 1;			// ...and continue waiting
@@ -218,7 +236,7 @@ int Wait2RegionEvent(int *where, double now, double *wait_t, TreeParams *paramet
 
 		else if (*where == 1)			// if it's only in region 1
 		{
-			which = uniform_distribution(0, x1+s1+d1);
+			which = uniform_distribution(0, wait_rate[1]);
 			if (which < x1)			// extinction
 				return 0;
 			else if (which < x1+s1)		// speciation
@@ -228,7 +246,7 @@ int Wait2RegionEvent(int *where, double now, double *wait_t, TreeParams *paramet
 
 		else if (*where == 2)			// if it's only in region 2
 		{
-			which = uniform_distribution(0, x2+s2+d2);
+			which = uniform_distribution(0, wait_rate[2]);
 			if (which < x2)			// extinction
 				return 0;
 			else if (which < x2+s2)		// speciation
@@ -257,22 +275,33 @@ void BuildTree2Regions(TreeNode *root, TreeParams *parameters)
 	if (todo == 0)
 	{}
 
-	/* if speciation occurred along that branch, move the root there and continue */
-	else if (todo == 1 || todo == 2)
-	{
-		root->time += wait_t;
-		root->trait = todo;
-		// note that "where" is the location of the parent lineage
-		BirthDeath2Regions(root, root, where, 0, parameters);
-	}
-
 	/* if there was no birth or death before reaching the stopping time */
-	else if (todo == 3)
+	else if (todo == 4)
 	{
 		temp = NewNode(root, parameters->end_t);
 		temp->trait = where;
 		node_counter++;
 
 		root->left = temp;
+	}
+
+	/* if speciation occurred along that branch, move the root there and continue */
+	else
+	{
+		root->time += wait_t;
+		// note that "where" is the location of the parent lineage
+		
+		// for allopatric speciation, one daughter gets state 1 and the parent 
+		//   gets state 2 (rather than keeping state 0)
+		if (todo == 3)
+		{
+			root->trait = 1;
+			where = 2;
+		}
+		// regular speciation
+		else	// todo = 1 or 2	
+			root->trait = todo;
+
+		BirthDeath2Regions(root, root, where, 0, parameters);
 	}
 }

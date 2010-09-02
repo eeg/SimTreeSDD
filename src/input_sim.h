@@ -12,7 +12,7 @@
 
 typedef struct
 {
-	double birth[2];			// speciation rates
+	double birth[3];			// speciation rates
 	double death[2];			// extinction rates
 	double transition[2];		// transition rates {0->1, 1->0}
 	double end_t;				// time for which to run the tree

@@ -1,0 +1,73 @@
+#############################################################################
+# This is an example file showing what parameter values can be given to
+#   SimTreeSDD.
+# Typical usage is simply
+#         SimTreeSDD params_SimTreeSDD.dat,
+# but values given here can be overruled with the command line call,
+#   e.g.  SimTreeSDD params_SimTreeSDD.dat birth0=1.0 file_prefix=useme
+# or everything can be specified on the command line.
+#############################################################################
+
+#--------------------------------------------------
+# you must specify what type of process you're interested in
+#-------------------------------------------------- 
+
+### for a binary character
+#trait_type = character
+
+### for the two region model
+trait_type = region
+
+#--------------------------------------------------
+# these 7 values must be specified for a tree to be created
+#-------------------------------------------------- 
+
+birth0  = 0.5	# speciation rate for state 0 or region A
+birth1  = 0.5	# speciation rate for state 1 or region B
+death0  = 0.3	# extinction rate for state 0 or region A
+death1  = 0.3	# extinction rate for state 1 or region B
+alpha   = 0.1	# rate of character transition 0 -> 1 or dispersal A -> B
+beta    = 0.1	# rate of character transition 1 -> 0 or dispersal B -> A
+end_t   = 5.0  # time for which to run the tree
+
+
+#--------------------------------------------------
+# these values are optional; defaults will be used if not specified here
+#-------------------------------------------------- 
+
+### allopatric speciation rate (only applicable for the two-region case)
+birthAB = 0.1	# default is 0
+
+### state of tree root
+### for trait_type = character, use 0 or 1 or -1
+###   (default is -1 = draw root state from stationary distribution)
+### for trait_type = region, use 0 or 1 or 2
+###   (default is 0 = present in both regions)
+root_state = 0
+
+### minimum number of tips a tree must have to be counted (default is 0)
+min_tips = 2
+
+### whether a tree must have more than one tip state to be counted
+### (default is 0/no)
+min_two_states = 1
+
+### number of trees to simulate (default is 1)
+num_trees = 10
+
+### number at which to start labeling output files (default is 1)
+num_start = 1
+
+### prefix to give output files (default: "run")
+### note: this can include a path, e.g. /home/you/sim_results/run
+file_prefix = test
+
+### verbosity setting (default: 2)
+### 0 = print nothing to screen, 1 = print some stuff, 2 = print lots
+verbosity = 1
+
+### which output files to create (1 to create it, 0 not to)
+write_newick = 0		# just the tree (default is 0)
+write_nexus = 0		# character and tree information (default is 1)
+write_bmstrait = 0		# trait file for BayesMultiState (default is 0)
+write_ttn = 1			# my tree-tip-node file (default is 0)

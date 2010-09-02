@@ -3,7 +3,8 @@
 #include <math.h>
 #include <time.h>
 #include <string.h>
-#include "build.h"
+#include "build_common.h"
+#include "build_2states.h"
 #include "build_2regions.h"
 #include "input_sim.h"
 #include "label.h"
@@ -47,8 +48,10 @@ int main(int argc, char *argv[])
 //				"\t(see params_SimTreeSDD.dat)\n\n");
  		return -1;
  	}
-// FIXME: check default values against the documentation
-// FIXME: is the parameter file mandatory?
+/*--------------------------------------------------
+* TODO: check default values against the documentation
+* TODO: should the parameter file be mandatory?
+*--------------------------------------------------*/
 	// load specified file containing parameter values
 	kv = loadKeyValue(argv[1]);
 
@@ -112,7 +115,7 @@ int main(int argc, char *argv[])
 			 * starting with a single node, build the tree 
 			 *    through a birth-death-transition process
 			 ***/
-			BirthDeath(treeRoot, treeRoot, 0, parameters);
+			BirthDeath2States(treeRoot, treeRoot, 0, parameters);
 		// TODO: option for starting with a single lineage for binary character?
 		else
 			/***
@@ -124,8 +127,9 @@ int main(int argc, char *argv[])
 
 		if (node_counter > TOO_BIG)
 		{
-			fprintf(stderr, "run %d: more than %d nodes -- aborting this run and writing no output\n", run_counter+parameters->num_start, TOO_BIG);
-//			run_counter++;
+			fprintf(stderr, "run %d: more than %d nodes -- aborting this run and "
+					"writing no output\n", run_counter+parameters->num_start, TOO_BIG);
+			// run_counter++;
 		}
 
 		else
@@ -174,7 +178,9 @@ int main(int argc, char *argv[])
 							tip_counter[i] = 0;
 						CountTipStates(treeRoot, tip_counter);
 						// TODO: test this
-						if ( (tip_counter[0]==0 && tip_counter[1]==0) || (tip_counter[0]==0 && tip_counter[2]==0) || (tip_counter[1]==0 && tip_counter[2]==0) )
+						if ( (tip_counter[0]==0 && tip_counter[1]==0) 
+								|| (tip_counter[0]==0 && tip_counter[2]==0) 
+								|| (tip_counter[1]==0 && tip_counter[2]==0) )
 							countrun = 0;
 					}
 				}
@@ -186,7 +192,8 @@ int main(int argc, char *argv[])
 
 					// adjust file_prefix if there will be more than one tree
 					if (parameters->num_trees > 1)
-						sprintf(temp_prefix, "%s-%d", parameters->file_prefix, run_counter+parameters->num_start);
+						sprintf(temp_prefix, "%s-%d", parameters->file_prefix, 
+								run_counter+parameters->num_start);
 					else
 						strcpy(temp_prefix, parameters->file_prefix);
 					
