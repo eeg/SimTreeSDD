@@ -383,7 +383,16 @@ void WriteTTNNodes(TreeNode *p, FILE *fp)
 		}
 		else
 		{
-			fprintf(fp, "%d\t%d\n", p->index, p->trait);
+			if (p->ptrait != -1)
+			{
+				fprintf(fp, "%d\t%d\n", p->index, p->ptrait);
+			}
+			else
+			{
+				fprintf(fp, "%d\t%d\n", p->index, p->trait);
+			}
 		}
 	}
 }
+
+// FIXME: use ptrait for node labels in .tre output, too

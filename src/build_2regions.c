@@ -62,7 +62,8 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where,
 		 *       0: global extinction (species is no longer in either region)
 		 *       1: speciation in region 1
 		 *       2: speciation in region 2
-		 *       3: reached end_t
+		 *       3: allopatric speciation
+		 *       4: reached end_t
 		 *****/
 		wait_t = 0;
 		todo = Wait2RegionEvent(&where, here->time, &wait_t, parameters);
@@ -102,9 +103,14 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where,
 			{
 				temp->trait = 1;
 				where = 2;
+				temp->ptrait = 0;
 			}
 			else	// todo = 1 or 2
+			{
 				temp->trait = todo;
+				if (where == 0)
+					temp->ptrait = 0;
+			}
 			/*****
 			 * NOTE: that is why BirthDeath2Regions needs a location argument: 
 			 *       the parent/left species may be in both locations, 
@@ -291,16 +297,21 @@ void BuildTree2Regions(TreeNode *root, TreeParams *parameters)
 		root->time += wait_t;
 		// note that "where" is the location of the parent lineage
 		
-		// for allopatric speciation, one daughter gets state 1 and the parent 
-		//   gets state 2 (rather than keeping state 0)
+		// for allopatric speciation, one daughter gets state 1 and the
+		//   parent gets state 2 (rather than keeping state 0)
 		if (todo == 3)
 		{
 			root->trait = 1;
 			where = 2;
+			root->ptrait = 0;
 		}
 		// regular speciation
 		else	// todo = 1 or 2	
+		{
 			root->trait = todo;
+			if (where == 0)
+				temp->ptrait = 0;
+		}
 
 		BirthDeath2Regions(root, root, where, 0, parameters);
 	}

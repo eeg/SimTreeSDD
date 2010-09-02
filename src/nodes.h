@@ -14,6 +14,7 @@ typedef struct tnode
 	double time, length;
 	struct tnode *left, *right, *anc;
 	int index, trait;
+	int ptrait;     // for 2regions and allopatric speciation
 } TreeNode;
 
 TreeNode *NewNode(TreeNode *ancestor, double t);
