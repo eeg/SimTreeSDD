@@ -1,0 +1,43 @@
+##############################################################################
+# This is an example file showing what parameters can be given to SDD-MCMC.
+# Do not attempt to specify values on the command line -- put everything here.
+# Only give one tree .ttn file with the program call -- others will be ignored.
+# The function call should look something like
+#      SDD-MCMC params_SDD-MCMC.dat mytree.ttn
+##############################################################################
+
+#####  All parameters except "model" have (probably) sensible default values.
+
+# specify the rates to estimate; options are 
+#   bdt, b2dt, bd2t, bdt2, b2d2t, b2dt2, bd2t2, b2d2t2
+#   e.g. bdt
+#      param1 = birth0 = birth1
+#      param2 = death0 = death1
+#      param3 = trans0 = trans1
+#   e.g. b2d2t2
+#      param1 = birth0
+#      param2 = birth1
+#      param3 = death0
+#      param4 = death1
+#      param5 = trans0
+#      param6 = trans1
+#   etc.
+model = bdt
+
+# the number of iterations to run (default is 1000)
+n_iter = 1000
+
+# parameters for the exponential priors (default is 0.5 for each)
+#  any values specified beyond the number of parameters in your model 
+#    (3, 4, 5, or 6) will be ignored
+#prior1 = 1
+
+# tuning parameters for the proposal distributions (default is 1.0 for each)
+#  you should aim for 20-60% acceptance
+#  any values specified beyond the number of parameters in your model 
+#    (3, 4, 5, or 6) will be ignored
+tune1 = 0.8
+
+# verbosity setting (default: 2)
+# 0 = print nothing to screen, 1 = print some stuff, 2 = print lots
+verbosity = 2

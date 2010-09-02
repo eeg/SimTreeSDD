@@ -1,0 +1,55 @@
+##############################################################################
+# This is an example file showing what parameters can be given to TreeLike.
+# Do not attempt to specify values on the command line -- put everything here.
+# The function call should look something like
+#      TreeLike params_TreeLike.dat tree1.ttn tree2.ttn
+# or
+#      TreeLike params_TreeLike.dat tree*.ttn
+##############################################################################
+
+##### you must specify a value for like_func (all other parameters have
+#####   sensible (probably) defaults
+
+# specify the type of likelihood function to use; options are
+#   1. prune
+#      use Felsenstein's (1981) pruning algorithm to get the likelihood of the
+#        tree, allowing estimation of 0->1 and 1->0 transition rates
+#      param1 = 0 -> 1 transition rate
+#      param2 = 1 -> 0 transition rate
+#   2. bd
+#      use Nee et al.'s (1994) birth-death likelihood function, allowing
+#        estimation of speciation and extinction rates (character states are
+#        ignored)
+#      param1 = speciation rate
+#      param2 = extinction rate
+#   coming later: bdt, bdt2, sdd [could change prune to t2, sdd to b2d2t2]
+like_func = bd
+
+# specify initial parameter values: put known values or your guesses here
+# (see discussion of like_func above for what these parameters are)
+# (default = 0.1 for all; note that 0 will be changed to a tiny positive number)
+param1 = 4.653053858912408
+param2 = 1.292564746616977
+
+# whether to get maximum likelihood estimates of transition values, using
+#  your given values of alpha and beta as starting guesses
+maximize = 1		# 0 = no, 1 = yes (default)
+
+# whether to get the likelihood and ancestral states (if like_func = prune)
+#   using your given parameter values
+use_fixed_param = 1 # 0 = no (default), 1 = yes
+
+# whether to reconstruct ancestral states (ignored unless like_func = prune)
+# uses your given param values (if use_fixed_param=1) and/or ML values (if
+#   maximize=1)
+# (this uses the "global, marginal" method, as does Mesquite)
+reconstruct = 1	# 0 = no, 1 = yes (default)
+
+# whether to write files for plotting the likelihood surface
+# makes a surface file for each tree and a total surface for all trees combined
+plot_like = 1		# 0 = no (default), 1 = yes
+# TODO: instead, make likelihood profiles for each parameter
+
+# verbosity setting (default: 2)
+# 0 = print nothing to screen, 1 = print some stuff, 2 = print lots
+verbosity = 2
