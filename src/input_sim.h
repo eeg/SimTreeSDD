@@ -21,6 +21,7 @@ typedef struct
 	int verbosity;				// how much stuff to print to screen (0, 1, 2)
 	int root_state;			// character state of the root species
 	int min_tips;				// number of tips a tree must have to be counted
+	int min_two_states;			// whether to discard a tree with only one state at tips
 	int num_trees;				// number of trees to simulate
 	int num_start;				// number at which to start labeling output files
 	int write_newick;			// output files to create

@@ -46,7 +46,7 @@ void PruningCL(TreeNode *p, double rates[])
 			p->cl[p->trait] = 1;
 			// the other cl was already initialized to 0
 		}
-		else										// for interior nodes
+		else									// for interior nodes
 		{
 			p->cl[0] = GetCL0(p, rates);
 			p->cl[1] = GetCL1(p, rates);

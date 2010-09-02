@@ -85,27 +85,53 @@ int Dex(TreeNode *p)
 
 /*******************************************************************************
  * print parameter values
-FIXME: adjust for 2region case
 *******************************************************************************/
 void ShowParamValues(TreeParams *parameters)
 {
-	if (verbosity == 2)
+	// for a binary character
+	if (parameters->trait_type == 0)
 	{
-		printf(	"   speciation rate, state 0:  %f\n"
-				"   speciation rate, state 1:  %f\n"
-				"   extinction rate, state 0:  %f\n"
-				"   extinction rate, state 1:  %f\n"
-				"   transition rate, 0 -> 1 :  %f\n"
-				"   transition rate, 1 -> 0 :  %f\n"
-				"   time to grow tree       :  %f\n",
-			parameters->birth[0], parameters->birth[1], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
+		if (verbosity == 2)
+		{
+			printf(	"   speciation rate, state 0:  %f\n"
+					"   speciation rate, state 1:  %f\n"
+					"   extinction rate, state 0:  %f\n"
+					"   extinction rate, state 1:  %f\n"
+					"   transition rate, 0 -> 1 :  %f\n"
+					"   transition rate, 1 -> 0 :  %f\n"
+					"   time to grow tree       :  %f\n",
+				parameters->birth[0], parameters->birth[1], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
+		}
+
+		else if (verbosity == 1)
+		{
+			printf( "   birth, death, transition rates; end_t:\n"
+					"   %f %f %f %f %f %f %f\n", 
+					parameters->birth[0], parameters->birth[1], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
+		}
 	}
 
-	else if (verbosity == 1)
+	// for a geographic character
+	else
 	{
-		printf( "   birth, death, transition rates; end_t:\n"
-				"   %f %f %f %f %f %f %f\n", 
+		if (verbosity == 2)
+		{
+			printf(	"   speciation rate, region A:  %f\n"
+					"   speciation rate, region B:  %f\n"
+					"   extinction rate, region A:  %f\n"
+					"   extinction rate, region B:  %f\n"
+					"   dispersal rate, A -> B   :  %f\n"
+					"   dispersal rate, B -> A   :  %f\n"
+					"   time to grow tree        :  %f\n",
 				parameters->birth[0], parameters->birth[1], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
+		}
+
+		else if (verbosity == 1)
+		{
+			printf( "   birth, death, dispersal; end_t:\n"
+					"   %f %f %f %f %f %f %f\n", 
+					parameters->birth[0], parameters->birth[1], parameters->death[0], parameters->death[1], parameters->transition[0], parameters->transition[1], parameters->end_t);
+		}
 	}
 }
 
@@ -144,10 +170,15 @@ void ShowRootMove(int report)
 /*******************************************************************************
 * print a note if the tree was discarded for having too few tips
 *******************************************************************************/
-void ShowTreeDiscard(TreeParams *parameters)
+void ShowTreeDiscard(TreeParams *parameters, int reason)
 {
 	if (verbosity == 2)
-		printf("not enough tips (min_tips = %d) -- discarding this tree\n", parameters->min_tips);
+	{
+		if (reason == 0)
+			printf("not enough tips (min_tips = %d) -- discarding this tree\n", parameters->min_tips);
+		else if (reason == 1)
+			printf("all tips in same state -- discarding this tree\n");
+	}
 }
 
 
@@ -167,8 +198,14 @@ void WriteNewickFile(TreeNode *p, char *prefix)
 
 	if (fp != NULL)
 	{
+		// NOTE: recently added ( and ) here
+		fprintf(fp, "(");
+		WriteNewickTree(p, fp);
+		fprintf(fp, ");\n");
+/*
 		WriteNewickTree(p, fp);
 		fprintf(fp, ";\n");
+*/
 
 		fclose(fp);
 
@@ -198,14 +235,14 @@ void WriteNewickTree(TreeNode *p, FILE *fp)
 /*******************************************************************************
  * write a Nexus file, containing character and tree information
 *******************************************************************************/
-void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[])
+void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[], TreeParams *parameters)
 {
 	FILE *fp;
 	char filename[128];
 	int i;
 
 	strcpy(filename, prefix);
-	strcat(filename, ".nexus");
+	strcat(filename, ".nex");
 
 	fp = fopen(filename, "w");
 
@@ -216,7 +253,11 @@ void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[])
 			fprintf(fp, " %d_tip%d", states[i], i);
 		fprintf(fp, ";\nEND;\n\n");
 
-		fprintf(fp, "BEGIN CHARACTERS;\n\tDIMENSIONS NCHAR = 1;\n\tFORMAT SYMBOLS = \"0 1\";\n\tMATRIX");
+		if (parameters->trait_type == 0)
+			fprintf(fp, "BEGIN CHARACTERS;\n\tDIMENSIONS NCHAR = 1;\n\tFORMAT SYMBOLS = \"0 1\";\n\tMATRIX");
+		else
+			fprintf(fp, "BEGIN CHARACTERS;\n\tDIMENSIONS NCHAR = 1;\n\tFORMAT SYMBOLS = \"0 1 2\";\n\tMATRIX");
+
 		for (i=0; i<n_tips; i++)
 			fprintf(fp, "\n\t\t%d_tip%d %d", states[i], i, states[i]);
 		fprintf(fp, ";\nEND;\n\n");
@@ -238,7 +279,7 @@ void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[])
 		printf("ERROR: can't open %s for writing\n", filename);
 }
 
-// for use with WriteNexusFile
+// for use with WriteNexusFile and WriteTTNFile
 void WriteNexusTree(TreeNode *p, FILE *fp)
 {
 	if (p->left == NULL && p->right == NULL)

@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 	// check the program call
 	if (argc < 3)
 	{
-		fprintf(stderr, "\nspecify a parameter file and a tree .ttn file(s)\n\n");
+		fprintf(stderr, "\nERROR: need to specify a parameter file and a tree .ttn file(s)\n\n");
  		return -1;
 	}
 

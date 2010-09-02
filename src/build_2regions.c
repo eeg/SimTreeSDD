@@ -13,7 +13,7 @@ extern int node_counter;			// keep track of number of nodes in the tree
 /***
  * NOTE about trait values:
  *   for a newly created node, trait is the location in which it arose (1 or 2)
- *   while waiting along a branch, trait can change due to dispersal or 
+ *   while waiting along a branch, trait can change due to dispersal and/or 
  *     extinction (becoming 0, 1, or 2)
  *   for a tip, trait is the location in which it is now (0, 1, or 2)
  ***/
@@ -223,7 +223,7 @@ int Wait2RegionEvent(int *where, double now, double *wait_t, TreeParams *paramet
 				return 0;
 			else if (which < x1+s1)		// speciation
 				return 1;
-			else *where = 0;			// continue waiting
+			else *where = 0;			// dispersal, so continue waiting
 		}
 
 		else if (*where == 2)			// if it's only in region 2
@@ -233,7 +233,7 @@ int Wait2RegionEvent(int *where, double now, double *wait_t, TreeParams *paramet
 				return 0;
 			else if (which < x2+s2)		// speciation
 				return 2;
-			else *where = 0;			// continue waiting
+			else *where = 0;			// dispersal, so continue waiting
 		}
 	}
 }

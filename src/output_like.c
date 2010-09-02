@@ -19,6 +19,7 @@ FILE *OpenFixedLikeFile(LikeParams *parameters)
 		sprintf(message, "created file %s", filename);
 		PrintMessage(message, 1);
 		fprintf(fp, "param1 = %e, param2 = %e\n", parameters->param[0], parameters->param[1]);
+		fprintf(fp, "tree\tn_tips\tlog(likelihood)\n");
 	}
 	else
 		fprintf(stderr, "can't open file %s for writing\n", filename);
@@ -35,7 +36,8 @@ void ReportFixedLike(FILE *fp, double loglike, TreeInfo *tree)
 	char message[1000];
 
 	if (fp)
-		fprintf(fp, "%s: log(likelihood) = %e\n", tree->name, loglike);
+//		fprintf(fp, "%s: log(likelihood) = %e\n", tree->name, loglike);
+		fprintf(fp, "%s\t\t%d\t\t%e\n", tree->name, tree->n_tips, loglike);
 	sprintf(message, "%s: log(likelihood) = %e for given param1 and param2", tree->name, loglike);
 	PrintMessage(message, 0);
 }

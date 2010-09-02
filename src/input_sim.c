@@ -109,13 +109,24 @@ int AcquireTreeParams(struct KeyValue *kv, TreeParams *parameters)
 	parameters->verbosity = getKeyValueint(kv, "verbosity");
 	if (parameters->verbosity == KV_INTERR)
 		parameters->verbosity = 2;
-	
-	// if (parameters->root_state== KV_INTERR), state will be drawn from stationary distribution
-	parameters->root_state= getKeyValueint(kv, "root_state");
-	
+
+	parameters->root_state = getKeyValueint(kv, "root_state");
+	// for character, default is to draw the root state from stationary distribution
+	if (parameters->trait_type == 0)
+	{
+		if (parameters->root_state < 0 || parameters->root_state > 1)
+			parameters->root_state = -1;
+	}
+	// for region, default is root present in both regions
+	else
+	{
+		if (parameters->root_state < 1 || parameters->root_state > 2)
+			parameters->root_state = 0;
+	}
+
 	// default is one tree
 	parameters->num_trees = getKeyValueint(kv, "num_trees");
-	if (parameters->num_trees == KV_INTERR)
+	if (parameters->num_trees < 0 || parameters->num_trees == KV_INTERR)
 		parameters->num_trees = 1;
 	
 	// default is start labeling at 1
@@ -125,9 +136,16 @@ int AcquireTreeParams(struct KeyValue *kv, TreeParams *parameters)
 	
 	// default is 0 tips required (all simulation runs count)
 	parameters->min_tips = getKeyValueint(kv, "min_tips");
-	if (parameters->min_tips == KV_INTERR)
+	if (parameters->min_tips < 0 || parameters->min_tips == KV_INTERR)
 		parameters->min_tips = 0;
 
+	// default is not to discard trees based on tip states
+	parameters->min_two_states = getKeyValueint(kv, "min_two_states");
+	if (parameters->min_two_states <= 0 || parameters->min_two_states == KV_INTERR)
+		parameters->min_two_states = 0;
+	else
+		parameters->min_two_states = 1;
+	
 	// default is to create newick file
 	parameters->write_newick = getKeyValueint(kv, "write_newick");
 	if (parameters->write_newick > 0 || parameters->write_newick == KV_INTERR)

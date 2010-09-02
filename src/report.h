@@ -9,6 +9,8 @@
 
 void GetTipStates(TreeNode *p, int states[]);
 void GetNodeTimes(TreeNode *p, double times[]);
+void GetNodeDepth(TreeNode *p, int depths[]);
+void GetBranchLengths(TreeNode *p, double lengths[]);
 void CountTipStates(TreeNode *p, int tip_counter[]);
 void CountTips(TreeNode *p, int *counter);
 

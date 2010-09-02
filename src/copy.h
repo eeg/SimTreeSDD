@@ -8,7 +8,8 @@
 
 #include "nodes.h"
 
-void CopyTree(TreeNode *p, TreeNode *q);
+TreeNode *CopyTree(TreeNode *oldroot);
+void CopyTreeGuts(TreeNode *p, TreeNode *q);
 void CopyNode(TreeNode *old, TreeNode *new);
 
 

@@ -16,6 +16,7 @@ typedef struct tnode
 	int index, trait;
 	double cl[2];			// conditional likelihoods
 	// in buildcheck, cl[direction] holds the trait value at the target time
+	// when adding stuff here, consider adding it to CopyNode (copy.c)
 } TreeNode;
 
 TreeNode *NewNode(TreeNode *ancestor, double t);

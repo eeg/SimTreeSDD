@@ -4,6 +4,10 @@
 #include "extra.h"
 #include "nodes.h"
 
+
+/*******************************************************************************
+ * file name manipulation
+ ******************************************************************************/
 void ChangeFileSuffix(char inname[], char oldend[], char newend[], char outname[])
 {
 	char *cutme;

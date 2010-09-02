@@ -27,14 +27,12 @@ int main(int argc, char *argv[])
  	int i, j, run_counter;
 	int n_tips;
 	int tip_states[(int) TOO_BIG/2];
-	int tip_counter[3];
-	int countrun;
 
 	
 	srandom(time(0));
 
 
-/******************************************************************************
+/*******************************************************************************
  * 1. user input of parameter values
  ******************************************************************************/
 
@@ -43,12 +41,10 @@ int main(int argc, char *argv[])
  	{
 		fprintf(stderr, "\n"
 				"usage: specify file with parameter values, and optionally values on command line\n"
-				"\t(e.g. %s sim-params.dat birth0=0.5)\n\n", argv[0]);
-//				"\t(see params_SimTreeSDD.dat)\n\n");
+				"\t(see params_SimTree2Regions.dat)\n\n");
  		return -1;
  	}
-// FIXME: check default values against the documentation
-// FIXME: is the parameter file mandatory?
+
 	// load specified file containing parameter values
 	kv = loadKeyValue(argv[1]);
 
@@ -56,7 +52,7 @@ int main(int argc, char *argv[])
 	if (argc > 2) for(i = 2; i < argc; i++)
 	{
 		if(argv[i][0] == '=') fprintf(stderr,
-			"Warning -- option begins with = (be sure to use option=value, without spaces)\n");
+			"Warning -- option begins with =\n");
 		for(j = 0; argv[i][j] != 0; j++) if(argv[i][j] == '=')
 			argv[i][j] = ' ';
 		if(sscanf(argv[i], "%s %s", k, v) != 2) continue;
@@ -104,28 +100,14 @@ int main(int argc, char *argv[])
 		report = AssignRootState(treeRoot, parameters);
 		ShowRootState(report);
 
-		// build the tree through a birth-death process
+		// starting with a single lineage (not a node), build the tree through a birth-death process
 		node_counter = 1;		// the root already exists	
-
-		if (parameters->trait_type == 0)
-			/***
-			 * starting with a single node, build the tree 
-			 *    through a birth-death-transition process
-			 ***/
-			BirthDeath(treeRoot, treeRoot, 0, parameters);
-		// TODO: option for starting with a single lineage for binary character?
-		else
-			/***
-			 * starting with a single lineage (not a node), build the tree 
-			 *    through a birth-death-dispersal process
-			 ***/
-			BuildTree2Regions(treeRoot, parameters);
-		// TODO: option for starting with a node for two regions?
+		BuildTree2Regions(treeRoot, parameters);
 
 		if (node_counter > TOO_BIG)
 		{
 			fprintf(stderr, "run %d: more than %d nodes -- aborting this run and writing no output\n", run_counter+parameters->num_start, TOO_BIG);
-//			run_counter++;
+			run_counter++;
 		}
 
 		else
@@ -153,64 +135,33 @@ int main(int argc, char *argv[])
 			// only record the results if there are at least min_tips tips
 			if (n_tips >= parameters->min_tips)
 			{
+				// show the tree on the screen
+				ShowTree(treeRoot);
+
 				// make an array containing the tip character states
 				GetTipStates(treeRoot, tip_states);
 
-				// check whether more than one character state is represented, if required
-				countrun = 1;
-				if (parameters->min_two_states == 1)
-				{
-					if (parameters->trait_type == 0)	// binary character
-					{
-						for (i=0; i<2; i++)
-							tip_counter[i] = 0;
-						CountTipStates(treeRoot, tip_counter);
-						if (tip_counter[0]==0 || tip_counter[1]==0)
-							countrun = 0;
-					}
-					else							// geographic character
-					{
-						for (i=0; i<3; i++)
-							tip_counter[i] = 0;
-						CountTipStates(treeRoot, tip_counter);
-						// TODO: test this
-						if ( (tip_counter[0]==0 && tip_counter[1]==0) || (tip_counter[0]==0 && tip_counter[2]==0) || (tip_counter[1]==0 && tip_counter[2]==0) )
-							countrun = 0;
-					}
-				}
-
-				if (countrun > 0)
-				{
-					// show the tree on the screen
-					ShowTree(treeRoot);
-
-					// adjust file_prefix if there will be more than one tree
-					if (parameters->num_trees > 1)
-						sprintf(temp_prefix, "%s-%d", parameters->file_prefix, run_counter+parameters->num_start);
-					else
-						strcpy(temp_prefix, parameters->file_prefix);
-					
-					// write the requested output files
-					if (parameters->write_newick > 0)
-						WriteNewickFile(treeRoot, temp_prefix);
-					if (parameters->write_nexus > 0)
-						WriteNexusFile(treeRoot, temp_prefix, n_tips, tip_states, parameters);
-					if (parameters->write_bmstrait > 0)
-						WriteBMSTraitFile(treeRoot, temp_prefix, n_tips, tip_states);
-					if (parameters->write_ttn > 0)
-						WriteTTNFile(treeRoot, temp_prefix);
-
-					run_counter++;
-				}
+				// adjust file_prefix if there will be more than one tree
+				if (parameters->num_trees > 1)
+					sprintf(temp_prefix, "%s-%d", parameters->file_prefix, run_counter+parameters->num_start);
 				else
-				{
-					ShowTreeDiscard(parameters, 1);
-					ShowTree(treeRoot);		// FIXME: remove this
-				}
+					strcpy(temp_prefix, parameters->file_prefix);
+				
+				// write the requested output files
+				if (parameters->write_newick > 0)
+					WriteNewickFile(treeRoot, temp_prefix);
+				if (parameters->write_nexus > 0)
+					WriteNexusFile(treeRoot, temp_prefix, n_tips, tip_states);
+				if (parameters->write_bmstrait > 0)
+					WriteBMSTraitFile(treeRoot, temp_prefix, n_tips, tip_states);
+				if (parameters->write_ttn > 0)
+					WriteTTNFile(treeRoot, temp_prefix);
+
+				run_counter++;
 			}
 			else
 			{
-				ShowTreeDiscard(parameters, 0);
+				ShowTreeDiscard(parameters);
 				// could also record in a file how many trees were discarded
 			}
 		}

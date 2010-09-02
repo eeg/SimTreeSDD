@@ -29,7 +29,10 @@ int AssignRootState(TreeNode *root, TreeParams *parameters)
 	}
 	else
 	{
+/* WRONG! changed 13 Sept 07
 		if (uniform_distribution(0,1) < parameters->transition[0]/(parameters->transition[0]+parameters->transition[1]))
+*/
+		if (uniform_distribution(0,1) < parameters->transition[1]/(parameters->transition[0]+parameters->transition[1]))
 		{
 			root->trait = 0;
 			report = 2;
@@ -55,9 +58,10 @@ void BirthDeath(TreeNode *root, TreeNode *here, int direction, TreeParams *param
 	TreeNode *temp;
 	int trait_now;
 
+
 	if (node_counter > TOO_BIG)
 	{
-		fprintf(stderr, "more than %d nodes ... aborting\n", TOO_BIG);
+//		fprintf(stderr, "more than %d nodes ... aborting\n", TOO_BIG);
 		return;
 	}
 
@@ -228,7 +232,9 @@ void BackUp(TreeNode *root, TreeNode *here, TreeParams *parameters)
 }
 
 
-
+/******************************************************************************
+ * make sure the root has two descendants, not just one
+ *****************************************************************************/
 TreeNode *MoveRoot(TreeNode *root)
 {
 	TreeNode *temp;

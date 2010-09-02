@@ -9,8 +9,8 @@
 #############################################################################
 
 ##### you must specify what type of process you're interested in
-#trait_type = character
-trait_type = region
+trait_type = character
+#trait_type = region
 
 ##### these 7 values must be specified for a tree to be created #####
 
@@ -31,29 +31,31 @@ end_t   = 5   # time for which to run the tree
 #   (default is -1 = draw root state from stationary distribution)
 # for trait_type = region, use 0 or 1 or 2
 #   (default is 0 = present in both regions)
-root_state = 0
+root_state = -1
 
 # minimum number of tips a tree must have to be counted (default is 0)
-min_tips = 0
+min_tips = 2
+# whether a tree must have more than one tip state to be counted (default is 0/no)
+min_two_states = 1
 # number of trees to simulate (default is 1)
-num_trees = 1
+num_trees = 10
 # number at which to start labeling output files (default is 1)
 num_start = 1
 
 # verbosity setting (default: 2)
 # 0 = print nothing to screen, 1 = print some stuff, 2 = print lots
-verbosity = 2
+verbosity = 1
 
 # prefix to give output files (default: "run")
 # note: this can include a path, e.g. /home/you/sim_results/run
 #file_prefix = /home/emma/ancestral_reconstruction/simulation/sim_output/run
-file_prefix = run
+file_prefix = test
 
 # which output files to create (1 to create it, 0 not to)
 # notes: for TreeViewX, set write_newick = 1
 #        for HyPhy, set write_newick = 1 and write_nexus = 1
 #        for BayesMS, set write_nexus = 1 and write_bmstrait = 1
 write_newick = 1		# just the tree (default is 1)
-write_nexus = 0		# character and tree information (default is 1)
-write_bmstrait = 0		# trait file for BayesMS (default is 0)
+write_nexus = 1		# character and tree information (default is 1)
+write_bmstrait = 1		# trait file for BayesMS (default is 0)
 write_ttn = 1			# tree-tip-node file for my read_newick (default is 0)

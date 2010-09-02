@@ -115,7 +115,6 @@ void ReadTreeString(TreeNode *root, char *tree_string)
 
 	while (keepGoing == 1)
 	{
-
 		if (nextChar == '(')
 		{
 			if (start == 1)
@@ -153,7 +152,7 @@ void ReadTreeString(TreeNode *root, char *tree_string)
 					namePlacement++;
 					index++;
 					nextChar = tree_string[index];
-					if(nextChar==',' || nextChar==')' || nextChar==':' || nextChar=='(' || nextChar== ';')
+					if (nextChar==',' || nextChar==')' || nextChar==':' || nextChar=='(' || nextChar== ';')
 					{
 						goingName = 0;
 						break;

@@ -2,12 +2,32 @@
 #include "nodes.h"
 #include "copy.h"
 
+
+
+
+/******************************************************************************
+ * this is mostly a wrapper around CopyTreeGuts, which does the hard work
+ * call this as:
+ *   TreeNode *newroot;
+ *   newroot = CopyTree(oldroot);
+ *****************************************************************************/
+TreeNode *CopyTree(TreeNode *oldroot)
+{
+	TreeNode *newroot;
+
+	newroot = NewNode(NULL, oldroot->time);
+	CopyNode(oldroot, newroot);
+	CopyTreeGuts(oldroot, newroot);
+
+	return newroot;
+}
+
+
 /******************************************************************************
  * copy one tree (p) to a new one (q)
- * (likely call with CopyTree(oldRoot, newRoot);)
+ * (likely call with CopyTreeGuts(oldRoot, newRoot);)
  *****************************************************************************/
-
-void CopyTree(TreeNode *p, TreeNode *q)
+void CopyTreeGuts(TreeNode *p, TreeNode *q)
 {
 	if (p != NULL)
 	{
@@ -18,7 +38,7 @@ void CopyTree(TreeNode *p, TreeNode *q)
 			q->left = NewNode(q, (p->left)->time);
 			CopyNode(p->left, q->left);
 		}
-		CopyTree(p->left, q->left);
+		CopyTreeGuts(p->left, q->left);
 
 		if (p->right == NULL)
 			q->right = NULL;
@@ -27,9 +47,10 @@ void CopyTree(TreeNode *p, TreeNode *q)
 			q->right = NewNode(q, (p->right)->time);
 			CopyNode(p->right, q->right);
 		}
-		CopyTree(p->right, q->right);
+		CopyTreeGuts(p->right, q->right);
 	}
 }
+
 
 void CopyNode(TreeNode *old, TreeNode *new)
 {

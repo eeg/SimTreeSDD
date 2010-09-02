@@ -7,10 +7,10 @@
 
 /* the degree of similarity among the vertices required to define convergence to a solution
    (I've been using 1.0e-16 or 1.0e-12 or 1.0e-08 */
-const double ftol = 1.0e-16;
+const double ftol = 1.0e-10;
 
 // if convergence is not reached by this many iterations, give up (100000 or 50000)
-const int max_iter = 50000;
+const int max_iter = 75000;
 
 
 static void swap(double *a, double *b)

@@ -23,11 +23,11 @@ void ShowTreeIndent(TreeNode *p, int indent);
 void ShowParamValues(TreeParams *parameters);
 void ShowRootState(int report);
 void ShowRootMove(int report);
-void ShowTreeDiscard(TreeParams *parameters);
+void ShowTreeDiscard(TreeParams *parameters, int reason);
 
 void WriteNewickFile(TreeNode *p, char *prefix);
 void WriteNewickTree(TreeNode *p, FILE *fp);
-void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[]);
+void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[], TreeParams *parameters);
 void WriteNexusTree(TreeNode *p, FILE *fp);
 void WriteBMSTraitFile(TreeNode *p, char *prefix, int n_tips, int states[]);
 void WriteTTNFile(TreeNode *p, char *prefix);

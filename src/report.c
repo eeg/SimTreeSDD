@@ -32,6 +32,45 @@ void GetNodeTimes(TreeNode *p, double times[])
 
 
 /*******************************************************************************
+ * put the node depths for each tip into an array
+ * (node depth = number of nodes from tip to root)
+ ******************************************************************************/
+void GetNodeDepth(TreeNode *p, int depths[])
+{
+	int index;
+	if (p != NULL)
+	{
+		GetNodeDepth(p->left,  depths);
+		GetNodeDepth(p->right, depths);
+		if (p->left == NULL && p->right == NULL)
+		{
+			index = p->index;
+			while (p->anc != NULL)
+			{
+				depths[index]++;
+				p = p->anc;
+			}
+		}
+	}
+}
+
+/*******************************************************************************
+ * put the branch lengths (internal and tips) into an array
+ * only use the first n_tips*2-2 entries in lengths[]
+ * (remove/ignore the root value = the next entry)
+ ******************************************************************************/
+void GetBranchLengths(TreeNode *p, double lengths[])
+{
+	if (p != NULL)
+	{
+		GetBranchLengths(p->left, lengths);
+		GetBranchLengths(p->right, lengths);
+		lengths[p->index] = p->length;
+	}
+}
+
+
+/*******************************************************************************
  * count the number of tips in each character state
  * (note that for a "tree" consisting of only a root, the root will be counted
  *    as a tip here, so make sure to avoid that case)
