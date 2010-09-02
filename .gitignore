@@ -1,1 +1,7 @@
 logfile
+*.swp
+*.o
+src/SimTreeSDD
+*.aux
+*.log
+*.toc

@@ -1,8 +1,8 @@
-all: simtreesdd.pdf
+all: SimTreeSDD-manual.pdf
 
-simtreesdd.pdf: simtreesdd.tex codedoc.sty
-	pdflatex simtreesdd.tex
-	pdflatex simtreesdd.tex
+SimTreeSDD-manual.pdf: SimTreeSDD-manual.tex codedoc.sty
+	pdflatex SimTreeSDD-manual.tex
+	pdflatex SimTreeSDD-manual.tex
 
 clean:
-	rm *.aux *.dvi *.log
+	rm -f *.aux *.log *.toc

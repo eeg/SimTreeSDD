@@ -1,5 +1,6 @@
 \documentclass[10pt]{article}
 \usepackage{fullpage}
+\usepackage{url}
 
 % my .sty file defining the environments filesays, commandis, tightlist
 \usepackage{codedoc}
@@ -8,36 +9,32 @@
 \parskip 10pt
 
 % TODO
-% table of contents
+% make an alias for SimTreeSDD, using the xspace package to take care of the spacing at the end of the word
 % check defaults against the code
 % put GPL info in each source file
-% decide whether to package TreeLike with this
-% make an alias for SimTreeSDD, using the xspace package to take care of the spacing at the end of the word
+% update webpage
 
 \begin{document}
 
 \title{ \Large{ {\bf SimTreeSDD}: {\bf Sim}ulating Phylogenetic {\bf Tree}s Under \\ {\bf S}tate-{\bf D}ependent {\bf D}iversification } }
-\author{ \large{Emma Goldberg} \\ \normalsize{\texttt{goldberg@biomail.ucsd.edu}} }
+\author{ \large{Emma E.\ Goldberg} \\ \normalsize{\texttt{eeg@uic.edu}} }
 \maketitle
-
-This document explains the motivation behind and (primarily) the usage of {\tt SimTreeSDD}.
 
 \tableofcontents
 
 \section*{Background}
 \addcontentsline{toc}{section}{Background}
 
-\subsection*{Motivation}
-\addcontentsline{toc}{subsection}{Motivation}
+\subsection*{Preliminaries}
+\addcontentsline{toc}{subsection}{Preliminaries}
 
-Branching processes are often used as macroevolutionary null models or for fitting empirical data.  In the process considered here, each lineage (species or other taxonomic level) at each time has a specified probability of giving rise to a new lineage (speciation/origination/birth), going extinct (extinction/death), or changing its state from one value of a character to another.  This is ``state-dependent diversification'' when the value of the character affects the probabilities of speciation and extinction.  Probabilities of birth, death, and character transition are assumed to be constant over time and across taxa.
+Branching processes are often used as macroevolutionary null models or for fitting empirical data.
+In the process considered here, each lineage (species or other taxonomic level) at each time has a specified probability of giving rise to a new lineage (speciation/origination/birth), going extinct (extinction/death), or changing its state from one value of a character to another.
+This is ``state-dependent diversification'' when the value of the character affects the probabilities of speciation and extinction.
 
-There is currently no established method for estimating rates of birth, death, and transition from a phylogenetic tree.  Birth and (in principle, at least) death rates can be estimated if character states are ignored, or character transition rates can be estimated if diversification is assumed not to depend on state, but if diversification really is state-dependent, these estimates will be incorrect and possibly quite misleading.
-
-The purpose of this simulator is to produce trees under state-dependent diversification processes.  I have found such trees to be useful for examining bias in rate estimates produced by a variety of non-state-dependent methods and for trying to estimate the rates correctly (i.e. speciation, extinction, and transition rates all at once).  I am documenting and distributing my code in the hopes that it will be useful to other folks as well.
-
-\subsection*{Definitions}
-\addcontentsline{toc}{subsection}{Definitions}
+The purpose of this simulator is to produce trees under state-dependent diversification processes.
+Probabilities of birth, death, and character transition are assumed to be constant over time and across taxa in this implementation.
+The two processes available now are BiSSE (binary state speciation and extinction; Maddison, Midford \& Otto (2007) SystBiol) and GeoSSE (geographic state speciation and extinction; Goldberg, Lancaster \& Ree (in review) SystBiol).
 
 As may be clear already, some terms are used interchangeably here:
 \begin{tightlist}
@@ -50,10 +47,18 @@ As may be clear already, some terms are used interchangeably here:
 \subsection*{Methods}
 \addcontentsline{toc}{subsection}{Methods}
 
-Two types of characters are possible here.  First, you can have a single binary character.  For example, eyes may be present or absent, or breeding system may be self-compatible or self-incompatible.  In this first case, there are (obviously) two possible states.
-Second, the character in question can be geographic location.  In the two-region model implemented here, there are three possible states: a species may be present in both regions, it may be present only in the first region, or it may be present only in the second region.  Transitions between these states occur through dispersal (a species present only in one region that disperses becomes present in bother regions) or local extinction (a species present in both regions that went extinct in the first region becomes present only in the second region).
+Two types of characters are possible here.
+First, for BiSSE, you can have a single binary character.
+For example, eyes may be present or absent, or breeding system may be self-compatible or self-incompatible.
+In this first case, there are (obviously) two possible states.
+Second, for GeoSSE, the character in question can be geographic location.
+In the two-region model implemented here, there are three possible states: a species may be present in both regions, it may be present only in the first region, or it may be present only in the second region.
+Transitions between these states occur through dispersal (a species present only in one region that disperses becomes present in both regions) or local extinction (a species present in both regions that went extinct in the first region becomes present only in the second region).
+Character state changes can also happen during speciation events if the parent lineage is in both regions.
 
-Each tree is simulated beginning with a single lineage or a branching point at an initial time and ending at a specified final time (or before then, if the tree goes extinct).  Six rates must be specified for the branching process.  For a binary character, these rates are
+Each tree is simulated beginning with a single lineage (GeoSSE) or a branching point (BiSSE) at an initial time and ending at a specified final time (or before then, if the tree goes extinct).
+Six rates must be specified for the branching process.
+For a binary character, these rates are
 \begin{tightlist}
 \item speciation in state 0
 \item speciation in state 1
@@ -71,15 +76,18 @@ and for a geographic character, these rates are
 \item dispersal from region A to region B
 \item dispersal from region B to region A
 \end{tightlist}
+A lineage present in both regions (AB) is subject to speciation in A (daughters are AB and A) or B (daughters are AB and B), or additionally, a between-region speciation rate may be given (daughters are A and B).
 
-The simulations are carried out in continuous time, and the results can be written to a variety of output file types.  The program is called from the command line, so it is easy to automate it to produce many trees organized however you like.
+The simulations are carried out in continuous time, and the results can be written to a variety of output file types.
+The program is called from the command line, so it is easy to automate it to produce many trees organized however you like.
+It is quite fast: performance obviously depends on hardware and parameter values, but I have never waited more than a couple seconds for a batch of thousands of reasonably large trees.
 
 
 \section*{How to use the program}
 \addcontentsline{toc}{section}{How to use the program}
 
 \texttt{SimTreeSDD} is written in C, and the program is command line-based, so the instructions below assume you are working from a terminal (e.g. \texttt{xterm} in Linux or \texttt{Terminal} in Mac OS X).
-There is no reason why it shouldn't work under Windows, but I haven't tried---if you use \texttt{SimTreeSDD} in Windows, please send me a howto and I will incorporate it here.
+There is no reason why it shouldn't work under Windows, but I haven't tried---if you have, please send me a howto and I will incorporate it here.
 
 Commands you should issue in the terminal are displayed like this:
 \begin{commandis}
@@ -96,17 +104,20 @@ and the contents of input or output files are displayed like this:
 \subsection*{Installation}
 \addcontentsline{toc}{subsection}{Installation}
 
-\texttt{SimTreeSDD} is available as C source code, so first download \texttt{SimTreeSDD\_files.tar.gz} from my website (currently http://www.biology.ucsd.edu/$\sim$goldberg).  Put this file wherever you like and navigate there in the terminal.  Then, unpack the files and compile the code:
+\texttt{SimTreeSDD} is available as C source code, so first download \texttt{SimTreeSDD\_xxx.tar.gz} from my website (currently \url{http://www.uic.edu/~eeg}; \texttt{xxx} is the date).
+Put this archive wherever you like and navigate there in the terminal.
+Then, unpack the files and compile the code:
 \begin{commandis}
-	tar zxvf SimTreeSDD\_files.tar.gz	\\
-	cd SimTreeSDD\_files/src/		\\
+	tar zxvf SimTreeSDD\_xxx.tar.gz	\\
+	cd SimTreeSDD\_xxx/src/		\\
 	make
 \end{commandis}
-This will create an executable called \texttt{SimTreeSDD}.  You may want to copy this to somewhere in your path, e.g.
+This will create an executable called \texttt{SimTreeSDD}.
+You may want to copy this to somewhere in your path, e.g.
 \begin{commandis}
 	cp SimTreeSDD /usr/local/bin/
 \end{commandis}
-If you don't do this, then in the examples below, replace \texttt{SimTreeSDD} with the relative or full path, which might be something like \texttt{$\sim$yourname/SimTreeSDD\_files/src/SimTreeSDD}.
+If you don't do this, then in the examples below, replace \texttt{SimTreeSDD} with the relative or full path, which might be something like \texttt{$\sim$yourname/SimTreeSDD\_xxx/src/SimTreeSDD}.
 
 
 \subsection*{Input options}
@@ -135,7 +146,7 @@ To simulate a tree with these values, type
 \end{commandis}
 (giving the path to \texttt{SimTreeSDD} if necessary).
 
-A sample input file with more options and comments is included as \texttt{SimTreeSDD\_files/work/sim-params.dat}.  
+A sample input file with more options and comments is included as \texttt{SimTreeSDD\_xxx/work/sim-params.dat}.  
 Here is a complete list of options and their possible values:
 \begin{optdescrip}
 	\item[trait\_type] the type of character to model
