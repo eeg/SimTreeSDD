@@ -115,20 +115,6 @@ double GetNextBD(TreeNode *p, TreeParams *parameters, double *t)
 		t1 = exponential_distribution(trans);		// time to next character change
 		t2 = exponential_distribution(lambda+mu);	// time to next birth or death
 
-		/*--------------------------------------------------
-		* // TEMP
-		* if (trans == 0)
-		* {
-		* 	printf("t1 = %f, t2 = %f\n", t1, t2);
-		* 	if (t1 > t2)
-		* 		printf("t1 > t2\n");
-		* 	else if (t1 < t2)
-		* 		printf("t1 < t2\n");
-		* 	else
-		* 		printf("t1 = t2\n");
-		* }
-		*--------------------------------------------------*/
-
 		if (t1 < t2)	// if the character changes before the next birth or death
 		{
 			*t += t1;

@@ -70,7 +70,7 @@ void ShowTreeIndent(TreeNode *p, int indent)
 	if (p != NULL)
 	{
 		printf("%*cN %d (l=%d r=%d a=%d t=%3.2f len=%3.2f tr=%d)\n", indent, ' ', 
-		  Dex(p), Dex(p->left), Dex(p->right), Dex(p->anc), p->time, p->length, p->trait);
+		  Dex(p), Dex(p->left), Dex(p->right), Dex(p->anc), p->time, p->length, p->ptrait);
 		ShowTreeIndent(p->left, indent + 2);
 		ShowTreeIndent(p->right, indent + 2);
 	}
@@ -221,14 +221,14 @@ void WriteNewickFile(TreeNode *p, char *prefix)
 void WriteNewickTree(TreeNode *p, FILE *fp)
 {
 	if (p->left == NULL && p->right == NULL)
-		fprintf(fp, "%d_tip%d:%lf", p->trait, p->index, p->length);
+		fprintf(fp, "%d_tip%d:%lf", p->ptrait, p->index, p->length);
 	else
 	{
 		fprintf(fp, "(");
 		WriteNewickTree(p->left, fp);
 		fprintf(fp, ",");
 		WriteNewickTree(p->right, fp);
-		fprintf(fp, ")%d_n%d:%lf", p->trait, p->index, p->length);
+		fprintf(fp, ")%d_n%d:%lf", p->ptrait, p->index, p->length);
 	}
 }
 
@@ -366,7 +366,7 @@ void WriteTTNTips(TreeNode *p, FILE *fp)
 		WriteTTNTips(p->right, fp);
 		if (p->left == NULL && p->right == NULL)
 		{
-			fprintf(fp, "%d\t%d\n", p->index, p->trait);
+			fprintf(fp, "%d\t%d\n", p->index, p->ptrait);
 		}
 	}
 }
@@ -383,16 +383,7 @@ void WriteTTNNodes(TreeNode *p, FILE *fp)
 		}
 		else
 		{
-			if (p->ptrait != -1)
-			{
-				fprintf(fp, "%d\t%d\n", p->index, p->ptrait);
-			}
-			else
-			{
-				fprintf(fp, "%d\t%d\n", p->index, p->trait);
-			}
+			fprintf(fp, "%d\t%d\n", p->index, p->ptrait);
 		}
 	}
 }
-
-// FIXME: use ptrait for node labels in .tre output, too

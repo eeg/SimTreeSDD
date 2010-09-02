@@ -13,6 +13,7 @@ extern int node_counter;			// keep track of number of nodes in the tree
 /***
  * NOTE about trait values:
  *   for a newly created node, trait is the location in which it arose (1 or 2)
+ *   new: ptrait is the state of the parent from which the new lineage came (0, 1, or 2)
  *   while waiting along a branch, trait can change due to dispersal and/or 
  *     extinction (becoming 0, 1, or 2)
  *   for a tip, trait is the location in which it is now (0, 1, or 2)
@@ -80,6 +81,7 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where,
 		{
 			temp = NewNode(here, parameters->end_t);
 			temp->trait = where;
+			temp->ptrait = where;
 			node_counter++;
 
 			if (direction == 0)
@@ -110,6 +112,8 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where,
 				temp->trait = todo;
 				if (where == 0)
 					temp->ptrait = 0;
+				else
+					temp->ptrait = todo;
 			}
 			/*****
 			 * NOTE: that is why BirthDeath2Regions needs a location argument: 
@@ -266,7 +270,7 @@ int Wait2RegionEvent(int *where, double now, double *wait_t, TreeParams *paramet
 
 /******************************************************************************
  * start with a single lineage (not a node)
- * see what happens to it, and if it speciates, build the tree
+ * see what happens to it; if it speciates, build the tree
  *****************************************************************************/
 void BuildTree2Regions(TreeNode *root, TreeParams *parameters)
 {
@@ -310,7 +314,7 @@ void BuildTree2Regions(TreeNode *root, TreeParams *parameters)
 		{
 			root->trait = todo;
 			if (where == 0)
-				temp->ptrait = 0;
+				root->ptrait = 0;
 		}
 
 		BirthDeath2Regions(root, root, where, 0, parameters);

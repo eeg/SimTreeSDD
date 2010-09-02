@@ -57,7 +57,7 @@ struct KeyValue *loadKeyValue(const char *filename)
 
 	while(1)
 	{
-		fgets(str, 999, in);
+		if(fgets(str, 999, in) == 0) break;
 		if(feof(in)) break;
 		if(str[0] == 0) continue;
 		eq = 0;
