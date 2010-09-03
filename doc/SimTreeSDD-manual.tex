@@ -2,12 +2,9 @@
 \usepackage{fullpage}
 \usepackage{url}
 
-% section headings
-\usepackage{sectsty}
-\allsectionsfont{\mdseries}
-\sectionfont{\flushleft\bf\large}
-\subsectionfont{\flushleft\bf\normalsize}
-\subsubsectionfont{\flushleft\bf\em\normalsize}
+\usepackage[small,compact]{titlesec}
+\titleformat*{\subsection}{\itshape\bfseries}
+\titleformat*{\subsubsection}{\itshape}
 
 % my .sty file defining the environments filesays, commandis, tightlist
 \usepackage{codedoc}
@@ -16,6 +13,7 @@
 \parskip 10pt
 
 % could make an alias for SimTreeSDD, using the xspace package to take care of the spacing at the end of the word
+
 
 \begin{document}
 
@@ -305,12 +303,13 @@ If you have this problem and really need to use whatever extreme parameter value
 
 
 \section*{Procedural stuff}
-\addcontentsline{toc}{subsection}{Procedural stuff}
+\addcontentsline{toc}{section}{Procedural stuff}
 
 \subsection*{Bugs and help}
 \addcontentsline{toc}{subsection}{Bugs and help}
-This code has been tested and used by me and others since 2006 (some of it even dates back to John Huelsenbeck's 2003 Phylogenetic class at UC San Diego), and as far as I know it works as it should.
-But of course, any software may have bugs, so if you encounter an unexplainable crash or a result that seems incorrect, please let me know.
+This code has been tested and used by me and others since 2006 (some of it even dates back to John Huelsenbeck's 2003 Phylogenetic class at UC San Diego).
+The input interface (\texttt{src/keyvalue.*}) was written by Walter Brisken.
+As far as I know everything works as it should, but of course, any software may have bugs, so if you encounter an unexplainable crash or a result that seems incorrect, please let me know.
 I would also be happy to hear if you have usability suggestions (e.g., making the documentation clearer or error-checking during use of the program), ideas for additional features that would be useful, or if you are making substantial changes to take the code in a new direction.
 
 \subsection*{License}
