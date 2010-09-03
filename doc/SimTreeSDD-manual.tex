@@ -2,17 +2,20 @@
 \usepackage{fullpage}
 \usepackage{url}
 
+% section headings
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+\sectionfont{\flushleft\bf\large}
+\subsectionfont{\flushleft\bf\normalsize}
+\subsubsectionfont{\flushleft\bf\em\normalsize}
+
 % my .sty file defining the environments filesays, commandis, tightlist
 \usepackage{codedoc}
 
 \parindent 0pt
 \parskip 10pt
 
-% TODO
-% make an alias for SimTreeSDD, using the xspace package to take care of the spacing at the end of the word
-% check defaults against the code
-% put GPL info in each source file
-% update webpage
+% could make an alias for SimTreeSDD, using the xspace package to take care of the spacing at the end of the word
 
 \begin{document}
 
@@ -123,7 +126,8 @@ If you don't do this, then in the examples below, replace \texttt{SimTreeSDD} wi
 \subsection*{Input options}
 \addcontentsline{toc}{subsection}{Input options}
 
-\texttt{SimTreeSDD} can be told what to do (i.e. what parameter values to use in the simulation and what output to write) in two ways.  First, you can use an input file, and second, you can pass options on the command line.
+\texttt{SimTreeSDD} can be told what to do (i.e., what parameter values to use in the simulation and what output to write) in two ways.
+First, you can use an input file, and second, you can pass options on the command line.
 
 \subsubsection*{Input file}
 \addcontentsline{toc}{subsubsection}{Input file}
@@ -146,7 +150,7 @@ To simulate a tree with these values, type
 \end{commandis}
 (giving the path to \texttt{SimTreeSDD} if necessary).
 
-A sample input file with more options and comments is included as \texttt{SimTreeSDD\_xxx/work/sim-params.dat}.  
+A sample input file with more options and comments is included as \texttt{misc/params\_SimTreeSDD.dat}.  
 Here is a complete list of options and their possible values:
 \begin{optdescrip}
 	\item[trait\_type] the type of character to model
@@ -161,6 +165,10 @@ Here is a complete list of options and their possible values:
 	\item[birth1] the speciation rate for trait 1 or region B
 		\begin{valdescrip}
 			\item[] any real non-negative number
+		\end{valdescrip}
+	\item[birthAB] the between-region speciation rate (only for \texttt{trait\_type=region})
+		\begin{valdescrip}
+			\item[] any real non-negative number [default is 0]
 		\end{valdescrip}
 	\item[death0] the extinction rate for trait 0 or region A
 		\begin{valdescrip}
@@ -187,9 +195,14 @@ Here is a complete list of options and their possible values:
 				for \texttt{trait\_type=region}, root state is present only in region A
 			\item[2] for \texttt{trait\_type=region}, root state is present only in region B
 		\end{valdescrip}
-	\item[min\_tips] the minimum number of tips a tree must have to be kept as a successful run; you can set this to whatever seems convenient, but keep in mind that this may introduce bias in some analyses
+	\item[min\_tips] the minimum number of tips a tree must have to be kept as a successful run; you can set this to whatever seems convenient, but keep in mind that a large value here may introduce bias in some analyses
 		\begin{valdescrip}
 			\item[] any non-negative integer [default is \texttt{0}]
+		\end{valdescrip}
+	\item[min\_two\_states] whether a tree must have more than one tip state represented to be kept as a successful run
+		\begin{valdescrip}
+			\item[0] no, keep trees with whatever tip states [default]
+			\item[1] yes, must have at least two states among the tips
 		\end{valdescrip}
 	\item[num\_trees] the number of (successful) trees to simulate
 		\begin{valdescrip}
@@ -198,7 +211,7 @@ Here is a complete list of options and their possible values:
 	\item[file\_prefix] a prefix to give output files
 		\begin{valdescrip}
 			\item[] any text string [default is \texttt{run}];
-				this can include a path, e.g. \texttt{sim-runs/run1}
+				this can include a path, e.g., \texttt{sim-runs/run1}
 		\end{valdescrip}
 	\item[num\_start] the number with which to start labeling output files (if \texttt{num\_trees} is greater than 1); \\ for example, you could produce trees named run-1.tre, run-2.tre, run-3.tre
 		\begin{valdescrip}
@@ -212,8 +225,8 @@ Here is a complete list of options and their possible values:
 		\end{valdescrip}
 	\item[write\_newick] create an output file containing the simulated tree in Newick format
 		\begin{valdescrip}
-			\item[0] don't create a \texttt{.tre} file for each tree
-			\item[1] do create a \texttt{.tre} file for each tree [default]
+			\item[0] don't create a \texttt{.tre} file for each tree [default]
+			\item[1] do create a \texttt{.tre} file for each tree
 		\end{valdescrip}
 	\item[write\_nexus] create an output file containing the simulated tree and character states in NEXUS format
 		\begin{valdescrip}
@@ -227,8 +240,8 @@ Here is a complete list of options and their possible values:
 		\end{valdescrip}
 	\item[write\_ttn] create an output file containing the simulated tree and character states in TTN format (see below)
 		\begin{valdescrip}
-			\item[0] don't create a \texttt{.ttn} file for each tree
-			\item[1] do create a \texttt{.ttn} file for each tree [default]
+			\item[0] don't create a \texttt{.ttn} file for each tree [default]
+			\item[1] do create a \texttt{.ttn} file for each tree
 		\end{valdescrip}
 \end{optdescrip}
 
@@ -247,14 +260,22 @@ If an option is specified in both places, the value on the command line takes pr
 \addcontentsline{toc}{subsection}{Output options}
 
 Depending on what you want to do with your simulated trees, you may want the output written in various forms.  
-For viewing trees with, for example, R or TreeViewX, set \texttt{write\_newick=1}.  The tree string written contains tip and node labels showing the character states.  Here is an example file for a small, 4-tip tree (but note that this is a single line in the real file):
+For viewing trees with, for example, TreeViewX, FigTree, or Dendroscope, set \texttt{write\_newick=1}.
+The tree string written contains tip and node labels showing the character states.  Here is an example file for a small, 4-tip tree (but note that this is a single line in the real file):
 \begin{filesays}{small\_tree.tre}
 (((0\_tip0:0.051603,0\_tip1:0.051603)0\_n4:0.002604,0\_tip2:0.054207)0\_n5:\\0.045793,1\_tip3:0.100000)1\_n6:0.000000;
 \end{filesays}
 
-For use with Mesquite, set \texttt{write\_nexus=1}.  For use with HyPhy, set \texttt{write\_newick=1} and \texttt{write\_nexus=1}.  For use with BayesMultiState, set \texttt{write\_nexus=1} and \texttt{write\_bmstrait=1}.
+For use with Mesquite, set \texttt{write\_nexus=1}.
+For use with HyPhy, set \texttt{write\_newick=1} and \texttt{write\_nexus=1}.
+For use with BayesMultiState, set \texttt{write\_nexus=1} and \texttt{write\_bmstrait=1}.
 
-For use with my other code (TreeLike and SDD-MCMC, which may or may not be packaged together with SimTreeSDD), you need a TTN file (\texttt{write\_ttn=1}).  This consists of the tree as a Newick string, a list of the tips and their trait values, and (optionally) a list of the nodes and their trait values.  So TTN stands for Tree, Tips, Nodes.  Here is an example file for the small tree used above:
+For use with R, you can pick any of the output formats.
+I like to use my own TTN format (\texttt{write\_ttn=1}), which consists of the tree as a Newick string on the first line, then a list of the tips and their trait values, and then (optionally) a list of the nodes and their trait values.
+So TTN stands for Tree, Tips, Nodes.
+I've included R functions for reading, writing, and displaying TTN files in \texttt{misc/ttn.R}.
+I might eventually create an interface for calling \texttt{SimTreeSDD} through R, to facilitate use with the BiSSE and GeoSSE parameter estimation code which is currently in the \texttt{diversitree} package.
+Here is an example TTN file for the same small tree as above:
 \begin{filesays}{small\_tree.ttn}
 (((0:0.051603,1:0.051603):0.002604,2:0.054207):0.045793,3:0.100000):0.000000; \\
 0    0	\\
@@ -270,10 +291,15 @@ For use with my other code (TreeLike and SDD-MCMC, which may or may not be packa
 \subsection*{Large tree warning}
 \addcontentsline{toc}{subsection}{Large tree warning}
 
-It is rather easy to choose parameter values that lead to extremely large trees.  This can cause trouble in (at least) three ways.
+It is rather easy to choose parameter values that lead to extremely large trees.
+This can cause trouble in (at least) three ways.
 First, output files may be unwieldy for other programs to handle.
-Second, \texttt{SimTreeSDD} itself may require a lot of memory, bogging down your computer.  To avoid this, \texttt{SimTreeSDD} will abort itself if a tree reaches 50,000 nodes.  This is an arbitrary cutoff, so if you need it to take a different value you can change the value of \texttt{TOO\_BIG} in \texttt{build.h}.
-Third, the tree-building algorithm uses heavy recursion, so it is possible to get so deep in recursive layers as to exceed your stack size.  \texttt{SimTreeSDD} can not check for this problem and so just dies with a segmentation fault.  Sorry about that, but it should not be an issue for reasonable values of \texttt{birth0}, \texttt{birth1}, \texttt{death0}, \texttt{death1}, and \texttt{end\_t}.  If you have this problem and really need to use whatever extreme parameter values you have set, you can increase the stack size with \texttt{ulimit} or \texttt{limit}---consult the documentation for your shell.
+Second, \texttt{SimTreeSDD} itself may require a lot of memory, bogging down your computer.
+To avoid this, \texttt{SimTreeSDD} will abort itself if a tree reaches 50,000 nodes.
+This is an arbitrary cutoff, and if you need it to take a different value you can change the value of \texttt{TOO\_BIG} in \texttt{src/build.h}.
+Third, the tree-building algorithm uses heavy recursion, so it is possible to get so deep in recursive layers as to exceed your stack size.
+\texttt{SimTreeSDD} can not check for this problem and so just dies with a segmentation fault.  Sorry about that, but it should not be an issue for reasonable values of the \texttt{birth*}, \texttt{death*}, and \texttt{end\_t} parameters.
+If you have this problem and really need to use whatever extreme parameter values you have set, you can increase the stack size with \texttt{ulimit} or \texttt{limit}---consult the documentation for your shell.
 % ulimit -s unlimited
 % man setrlimit
 
@@ -283,15 +309,14 @@ Third, the tree-building algorithm uses heavy recursion, so it is possible to ge
 
 \subsection*{Bugs and help}
 \addcontentsline{toc}{subsection}{Bugs and help}
-This code has been tested and used by me and others, and as far as I know it works as it should.  But of course, any software may have bugs, so don't expect to hold me accountable if you do anything life-threatening with this program!
-If you encounter a bug, either an unexplainable crash or a result that seems incorrect, please let me know.  You can either send me a good description of the problem or, better yet, fix it yourself and send me a patch.
-
-I originally wrote this code because I needed it, but I wrote this documentation because I want it to be useful to other people.  So if you have read the instructions here but are still having problems getting things working, just let me know and I will try to help.
-I would also be happy to hear if you have usability suggestions (e.g.\ making the documentation clearer or error-checking during use of the program), ideas for additional features that would be useful, or if you are making substantial changes to take the code in a new direction.  And of course I would be especially glad to hear if the program just worked for your purposes!
+This code has been tested and used by me and others since 2006 (some of it even dates back to John Huelsenbeck's 2003 Phylogenetic class at UC San Diego), and as far as I know it works as it should.
+But of course, any software may have bugs, so if you encounter an unexplainable crash or a result that seems incorrect, please let me know.
+I would also be happy to hear if you have usability suggestions (e.g., making the documentation clearer or error-checking during use of the program), ideas for additional features that would be useful, or if you are making substantial changes to take the code in a new direction.
 
 \subsection*{License}
 \addcontentsline{toc}{subsection}{License}
-This software is issued under the Gnu Public License (http://www.gnu.org/licenses/gpl.html).  The full text of the license is included with the code, but the gist of it is (1) you can do whatever you want with this code and modify it however you like, and (2) if you redistribute this code or your modified version, it must also be under the GPL.
+This software is issued under the Gnu Public License (http://www.gnu.org/licenses/gpl.html).  
+The full text of the license is included with the code, but the gist of it is (1) you can do whatever you want with this code and modify it however you like, and (2) if you redistribute this code or your modified version, it must also be under the GPL.
 
 
 \end{document}
