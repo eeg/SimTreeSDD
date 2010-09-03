@@ -1,5 +1,3 @@
-add tree+state viewing to ttn.R
-craft make dist file
-put GPL info in each source file
+add tree+state viewing to ttn.R; then sim trees and test ttn.R
 update webpage
 hyperrefs (internal and external) in manual
