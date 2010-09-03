@@ -30,20 +30,12 @@
 \addcontentsline{toc}{subsection}{Preliminaries}
 
 Branching processes are often used as macroevolutionary null models or for fitting empirical data.
-In the process considered here, each lineage (species or other taxonomic level) at each time has a specified probability of giving rise to a new lineage (speciation/origination/birth), going extinct (extinction/death), or changing its state from one value of a character to another.
+In the process considered here, each lineage (species or other taxonomic level) at each time has a specified probability of giving rise to a new lineage (speciation/origination/birth), going extinct (extinction/death), or changing its character state from one trait value to another.
 This is ``state-dependent diversification'' when the value of the character affects the probabilities of speciation and extinction.
 
 The purpose of this simulator is to produce trees under state-dependent diversification processes.
 Probabilities of birth, death, and character transition are assumed to be constant over time and across taxa in this implementation.
 The two processes available now are BiSSE (binary state speciation and extinction; Maddison, Midford \& Otto (2007) SystBiol) and GeoSSE (geographic state speciation and extinction; Goldberg, Lancaster \& Ree (in review) SystBiol).
-
-As may be clear already, some terms are used interchangeably here:
-\begin{tightlist}
-\item lineage = species = taxon
-\item birth = speciation = origination
-\item death = extinction
-\item trait value = (character) state
-\end{tightlist}
 
 \subsection*{Methods}
 \addcontentsline{toc}{subsection}{Methods}
@@ -105,12 +97,12 @@ and the contents of input or output files are displayed like this:
 \subsection*{Installation}
 \addcontentsline{toc}{subsection}{Installation}
 
-\texttt{SimTreeSDD} is available as C source code, so first download \texttt{SimTreeSDD\_xxx.tar.gz} from my website (currently \url{http://www.uic.edu/~eeg}; \texttt{xxx} is the date).
+\texttt{SimTreeSDD} is available as C source code, so first download \texttt{SimTreeSDD-xxx.tar.gz} from my website (currently \url{http://www.uic.edu/~eeg}; \texttt{xxx} is the date).
 Put this archive wherever you like and navigate there in the terminal.
 Then, unpack the files and compile the code:
 \begin{commandis}
-	tar zxvf SimTreeSDD\_xxx.tar.gz	\\
-	cd SimTreeSDD\_xxx/src/		\\
+	tar zxvf SimTreeSDD-xxx.tar.gz	\\
+	cd SimTreeSDD-xxx/src/		\\
 	make
 \end{commandis}
 This will create an executable called \texttt{SimTreeSDD}.
@@ -118,7 +110,7 @@ You may want to copy this to somewhere in your path, e.g.
 \begin{commandis}
 	cp SimTreeSDD /usr/local/bin/
 \end{commandis}
-If you don't do this, then in the examples below, replace \texttt{SimTreeSDD} with the relative or full path, which might be something like \texttt{$\sim$yourname/SimTreeSDD\_xxx/src/SimTreeSDD}.
+If you don't do this, then in the examples below, replace \texttt{SimTreeSDD} with the relative or full path, which might be something like \texttt{$\sim$yourname/SimTreeSDD-xxx/src/SimTreeSDD}.
 
 
 \subsection*{Input options}
@@ -307,7 +299,7 @@ If you have this problem and really need to use whatever extreme parameter value
 
 \subsection*{Bugs and help}
 \addcontentsline{toc}{subsection}{Bugs and help}
-This code has been tested and used by me and others since 2006 (some of it even dates back to John Huelsenbeck's 2003 Phylogenetic class at UC San Diego).
+This code has been tested and used by me and others since 2006 (some of it even dates back to John Huelsenbeck's 2003 Phylogenetics class at UC San Diego).
 The input interface (\texttt{src/keyvalue.*}) was written by Walter Brisken.
 As far as I know everything works as it should, but of course, any software may have bugs, so if you encounter an unexplainable crash or a result that seems incorrect, please let me know.
 I would also be happy to hear if you have usability suggestions (e.g., making the documentation clearer or error-checking during use of the program), ideas for additional features that would be useful, or if you are making substantial changes to take the code in a new direction.
