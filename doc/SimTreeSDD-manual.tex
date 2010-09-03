@@ -269,13 +269,13 @@ For use with HyPhy, set \texttt{write\_newick=1} and \texttt{write\_nexus=1}.
 For use with BayesMultiState, set \texttt{write\_nexus=1} and \texttt{write\_bmstrait=1}.
 
 For use with R, you can pick any of the output formats.
-I like to use my own TTN format (\texttt{write\_ttn=1}), which consists of the tree as a Newick string on the first line, then a list of the tips and their trait values, and then (optionally) a list of the nodes and their trait values.
+I like to use my own TTN format (\texttt{write\_ttn=1}), which consists of the tree as a Newick string on the first line, then a list of the tips and their trait values, and then (optionally) a downpass-ordered list of the nodes and their trait values.
 So TTN stands for Tree, Tips, Nodes.
 I've included R functions for reading, writing, and displaying TTN files in \texttt{misc/ttn.R}.
 I might eventually create an interface for calling \texttt{SimTreeSDD} through R, to facilitate use with the BiSSE and GeoSSE parameter estimation code which is currently in the \texttt{diversitree} package.
 Here is an example TTN file for the same small tree as above:
 \begin{filesays}{small\_tree.ttn}
-(((0:0.051603,1:0.051603):0.002604,2:0.054207):0.045793,3:0.100000):0.000000; \\
+(((0:0.051603,1:0.051603)4:0.002604,2:0.054207)5:0.045793,3:0.100000)6:0.000000; \\
 0    0	\\
 1    0	\\
 2    0	\\

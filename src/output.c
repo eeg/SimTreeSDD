@@ -299,7 +299,7 @@ void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[], TreePar
 		printf("ERROR: can't open %s for writing\n", filename);
 }
 
-// for use with WriteNexusFile and WriteTTNFile
+// for use with WriteNexusFile (and used be be used in WriteTTNFile)
 void WriteNexusTree(TreeNode *p, FILE *fp)
 {
 	if (p->left == NULL && p->right == NULL)
@@ -347,6 +347,7 @@ void WriteBMSTraitFile(TreeNode *p, char *prefix, int n_tips, int states[])
 /*******************************************************************************
  * writes the tree string and list of trait values for use by my read_newick
 *******************************************************************************/
+void WriteTTNTree(TreeNode *p, FILE *fp);
 void WriteTTNTips(TreeNode *p, FILE *fp);
 void WriteTTNNodes(TreeNode *p, FILE *fp);
 void WriteTTNFile(TreeNode *p, char *prefix)
@@ -361,7 +362,7 @@ void WriteTTNFile(TreeNode *p, char *prefix)
 
 	if (fp != NULL)
 	{
-		WriteNexusTree(p, fp);
+		WriteTTNTree(p, fp);
 		fprintf(fp, ";\n");
 
 		WriteTTNTips(p, fp);
@@ -374,6 +375,21 @@ void WriteTTNFile(TreeNode *p, char *prefix)
 	}
 	else
 		printf("ERROR: can't open %s for writing\n", filename);
+}
+
+// for use with WriteTTNFile
+void WriteTTNTree(TreeNode *p, FILE *fp)
+{
+	if (p->left == NULL && p->right == NULL)
+		fprintf(fp, "%d:%lf", p->index, p->length);
+	else
+	{
+		fprintf(fp, "(");
+		WriteTTNTree(p->left, fp);
+		fprintf(fp, ",");
+		WriteTTNTree(p->right, fp);
+		fprintf(fp, ")%d:%lf", p->index, p->length);
+	}
 }
 
 // for use with WriteTTNFile
