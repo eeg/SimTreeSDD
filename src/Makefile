@@ -19,5 +19,4 @@ SimTreeSDD: ${SimTreeSDD_obj}
 #	mv ${targets} ../
 
 clean:
-#	rm *.o ${targets}
-	rm *.o
+	rm -f *.o ${targets}
