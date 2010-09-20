@@ -194,6 +194,11 @@ Here is a complete list of options and their possible values:
 			\item[0] no, keep trees with whatever tip states [default]
 			\item[1] yes, must have at least two states among the tips
 		\end{valdescrip}
+	\item[req\_all\_states] whether a tree must have all possible states represented at its tips to be kept as a successful run; identical to \texttt{min\_two\_states} when \texttt{trait\_type=character}
+		\begin{valdescrip}
+			\item[0] no, keep trees with whatever tip states [default]
+			\item[1] yes, must have all states among the tips
+		\end{valdescrip}
 	\item[num\_trees] the number of (successful) trees to simulate
 		\begin{valdescrip}
 			\item[] any non-negative integer [default is \texttt{1}]

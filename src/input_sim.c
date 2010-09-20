@@ -172,6 +172,12 @@ int AcquireTreeParams(struct KeyValue *kv, TreeParams *parameters)
 	else
 		parameters->min_two_states = 1;
 	
+	parameters->req_all_states = getKeyValueint(kv, "req_all_states");
+	if (parameters->req_all_states <= 0 || parameters->req_all_states == KV_INTERR)
+		parameters->req_all_states = 0;
+	else
+		parameters->req_all_states = 1;
+	
 	// default is not to create newick file
 	parameters->write_newick = getKeyValueint(kv, "write_newick");
 	if (parameters->write_newick <= 0 || parameters->write_newick == KV_INTERR)

@@ -76,7 +76,7 @@ write.ttn <- function(ttn, filename, nodes=FALSE)
 
 plot.ttn <- function(ttn, nodes=TRUE)
 {
-     state.colors <- c("black", "white", "gray")
+     state.colors <- c("gray", "black", "white")
 
      tree <- ttn$tree
      plot(tree, label.offset=0.2)

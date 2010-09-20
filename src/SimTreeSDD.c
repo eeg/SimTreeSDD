@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 
 				// check whether more than one character state is represented, if required
 				countrun = 1;
-				if (parameters->min_two_states == 1)
+				if (parameters->min_two_states == 1 || parameters->req_all_states == 1)
 				{
 					if (parameters->trait_type == 0)	// binary character
 					{
@@ -192,8 +192,14 @@ int main(int argc, char *argv[])
 						for (i=0; i<3; i++)
 							tip_counter[i] = 0;
 						CountTipStates(treeRoot, tip_counter);
-						// TODO: test this
-						if ( (tip_counter[0]==0 && tip_counter[1]==0) 
+
+						if (parameters->req_all_states == 1)
+						{
+							if (tip_counter[0]==0 || tip_counter[1]==0 || tip_counter[2]==0 )
+								countrun = 0;
+						}
+
+						else if ( (tip_counter[0]==0 && tip_counter[1]==0) 
 								|| (tip_counter[0]==0 && tip_counter[2]==0) 
 								|| (tip_counter[1]==0 && tip_counter[2]==0) )
 							countrun = 0;
@@ -227,13 +233,13 @@ int main(int argc, char *argv[])
 				else
 				{
 					ShowTreeDiscard(parameters, 1);
-					ShowTree(treeRoot);		// FIXME: remove this
+					//ShowTree(treeRoot);
 				}
 			}
 			else
 			{
 				ShowTreeDiscard(parameters, 0);
-				// could also record in a file how many trees were discarded
+				// TODO: also report or record in a file how many trees were discarded
 			}
 		}
 

@@ -49,9 +49,10 @@ root_state = 0
 ### minimum number of tips a tree must have to be counted (default is 0)
 min_tips = 2
 
-### whether a tree must have more than one tip state to be counted
+### whether a tree must have all states represented at the tips to be counted
+### (or, use min_two_states instead)
 ###   (default is 0/no)
-min_two_states = 1
+req_all_states = 1
 
 ### number of trees to simulate (default is 1)
 num_trees = 10
