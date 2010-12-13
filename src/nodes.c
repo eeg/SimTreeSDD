@@ -44,7 +44,7 @@ TreeNode *NewNode(TreeNode *ancestor, double t)
 	p->right = NULL;	// will be assigned if there are descendents
 	p->index = -1;		// will assign this later
 	p->trait = -1;		// will assign this later
-	p->ptrait = -1;	// will assign this is allopatric speciation happens
+	p->ptrait = -1;	// will assign this if allopatric speciation happens
 
 	return p;
 }

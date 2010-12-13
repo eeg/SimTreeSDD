@@ -62,6 +62,7 @@ int AssignRootState(TreeNode *root, TreeParams *parameters)
 		}
 	}
 
+	root->ptrait = root->trait;
 	return report;
 }
 
