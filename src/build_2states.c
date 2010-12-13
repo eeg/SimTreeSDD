@@ -69,6 +69,7 @@ void BirthDeath2States(TreeNode *root, TreeNode *here, int direction, TreeParams
 		{
 			temp = NewNode(here, parameters->end_t);
 			temp->trait = trait_now;
+			temp->ptrait = temp->trait;
 			node_counter++;
 
 			if (direction == 0)					// if going left
@@ -90,6 +91,7 @@ void BirthDeath2States(TreeNode *root, TreeNode *here, int direction, TreeParams
 			{
 				temp = NewNode(here, (here->time)+t);
 				temp->trait = trait_now;
+				temp->ptrait = temp->trait;
 				node_counter++;
 
 				if (direction == 0)			// if going left
