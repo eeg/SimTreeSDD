@@ -1,5 +1,5 @@
 /******************************************************************************
-* Copyright 2010 Emma Goldberg
+* Copyright 2009 Emma Goldberg
 * 
 * This file is part of SimTreeSDD.
 * 
