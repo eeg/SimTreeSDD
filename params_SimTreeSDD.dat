@@ -22,13 +22,13 @@ trait_type = region
 # these 7 values must be specified for a tree to be created
 #-------------------------------------------------- 
 
-birth0  = 0.5	# speciation rate for state 0 or region A
-birth1  = 0.5	# speciation rate for state 1 or region B
-death0  = 0.3	# extinction rate for state 0 or region A
-death1  = 0.3	# extinction rate for state 1 or region B
-alpha   = 0.1	# rate of character transition 0 -> 1 or dispersal A -> B
-beta    = 0.1	# rate of character transition 1 -> 0 or dispersal B -> A
-end_t   = 5.0  # time for which to run the tree
+birth0  = 1.5	# speciation rate for state 0 or region A
+birth1  = 0.0	# speciation rate for state 1 or region B
+death0  = 0.5	# extinction rate for state 0 or region A
+death1  = 0.5	# extinction rate for state 1 or region B
+alpha   = 2.0	# rate of character transition 0 -> 1 or dispersal A -> B
+beta    = 0.0	# rate of character transition 1 -> 0 or dispersal B -> A
+end_t   = 5.1  # time for which to run the tree
 
 
 #--------------------------------------------------
@@ -36,7 +36,7 @@ end_t   = 5.0  # time for which to run the tree
 #-------------------------------------------------- 
 
 ### allopatric speciation rate (only applicable for the two-region case)
-birthAB = 0.1	# default is 0
+birthAB = 0.0	# default is 0
 
 ### state of tree root
 ### for trait_type = character, use 0 or 1 or -1
@@ -60,7 +60,7 @@ num_start = 1
 
 ### prefix to give output files (default: "run")
 ### note: this can include a path, e.g. /home/you/sim_results/run
-file_prefix = test
+file_prefix = tree
 
 ### verbosity setting (default: 2)
 ### 0 = print nothing to screen, 1 = print some stuff, 2 = print lots
