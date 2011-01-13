@@ -13,7 +13,6 @@ depend:
 
 SimTreeSDD: ${SimTreeSDD_obj}
 	${CC} ${LDFLAGS} ${SimTreeSDD_obj} -o SimTreeSDD
-	mv ${targets} ../
 
 clean:
 	rm *.o ${targets}
