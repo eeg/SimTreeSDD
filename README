@@ -1,0 +1,10 @@
+SimTreeSDD
+June 2009
+Emma E. Goldberg: eeg@uic.edu, www.uic.edu/~eeg/code/code.html
+
+BUILD
+	cd src/
+	make
+
+USAGE
+	see params_SimTreeSDD.dat

@@ -11,13 +11,9 @@ all: ${targets}
 depend:
 	gcc -E -MM *.c > .depend
 
-#install:
-#	cp ${targets} /usr/local/bin/
-
 SimTreeSDD: ${SimTreeSDD_obj}
 	${CC} ${LDFLAGS} ${SimTreeSDD_obj} -o SimTreeSDD
 	mv ${targets} ../
 
 clean:
-#	rm *.o ${targets}
-	rm *.o
+	rm *.o ${targets}

@@ -67,7 +67,7 @@ file_prefix = test
 verbosity = 1
 
 ### which output files to create (1 to create it, 0 not to)
-write_newick = 0		# just the tree (default is 0)
+write_newick = 1		# just the tree (default is 0)
 write_nexus = 0		# character and tree information (default is 1)
 write_bmstrait = 0		# trait file for BayesMultiState (default is 0)
 write_ttn = 1			# my tree-tip-node file (default is 0)

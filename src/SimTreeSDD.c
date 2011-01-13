@@ -1,3 +1,23 @@
+/******************************************************************************
+* Copyright 2010 Emma Goldberg
+* 
+* This file is part of SimTreeSDD.
+* 
+* SimTreeSDD is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* SimTreeSDD is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with SimTreeSDD.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -48,10 +68,6 @@ int main(int argc, char *argv[])
 //				"\t(see params_SimTreeSDD.dat)\n\n");
  		return -1;
  	}
-/*--------------------------------------------------
-* TODO: check default values against the documentation
-* TODO: should the parameter file be mandatory?
-*--------------------------------------------------*/
 	// load specified file containing parameter values
 	kv = loadKeyValue(argv[1]);
 
@@ -177,7 +193,6 @@ int main(int argc, char *argv[])
 						for (i=0; i<3; i++)
 							tip_counter[i] = 0;
 						CountTipStates(treeRoot, tip_counter);
-						// TODO: test this
 						if ( (tip_counter[0]==0 && tip_counter[1]==0) 
 								|| (tip_counter[0]==0 && tip_counter[2]==0) 
 								|| (tip_counter[1]==0 && tip_counter[2]==0) )
@@ -212,7 +227,7 @@ int main(int argc, char *argv[])
 				else
 				{
 					ShowTreeDiscard(parameters, 1);
-					ShowTree(treeRoot);		// FIXME: remove this
+					ShowTree(treeRoot);
 				}
 			}
 			else
