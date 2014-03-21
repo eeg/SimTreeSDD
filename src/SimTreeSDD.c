@@ -228,6 +228,9 @@ int main(int argc, char *argv[])
 					if (parameters->write_ttn > 0)
 						WriteTTNFile(treeRoot, temp_prefix);
 
+					// TODO: if this is useful, add a control parameter for it, write_ages
+					WriteAgeFile(treeRoot, temp_prefix);
+
 					run_counter++;
 				}
 				else

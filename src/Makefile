@@ -15,7 +15,7 @@ depend:
 #	cp ${targets} /usr/local/bin/
 
 SimTreeSDD: ${SimTreeSDD_obj}
-	${CC} ${LDFLAGS} ${SimTreeSDD_obj} -o SimTreeSDD
+	${CC} ${SimTreeSDD_obj} ${LDFLAGS} -o SimTreeSDD
 #	mv ${targets} ../
 
 clean:

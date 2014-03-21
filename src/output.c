@@ -422,3 +422,58 @@ void WriteTTNNodes(TreeNode *p, FILE *fp)
 		}
 	}
 }
+
+/*******************************************************************************
+ * writes the absolute age for each species
+ ******************************************************************************/
+void WriteAgeTree(TreeNode *p, FILE *fp);
+void WriteAgeFile(TreeNode *p, char *prefix)
+{
+	FILE *fp;
+	char filename[100];
+
+	strcpy(filename, prefix);
+	strcat(filename, ".age");
+
+	fp = fopen(filename, "w");
+
+	if (fp != NULL)
+	{
+		WriteAgeTree(p, fp);
+		fclose(fp);
+
+		if (verbosity > 0)
+			printf("created file %s\n", filename);
+	}
+	else
+		printf("ERROR: can't open %s for writing\n", filename);
+}
+
+// for use with WriteAgeFile
+void WriteAgeTree(TreeNode *p, FILE *fp)
+{
+	if (p != NULL)
+	{
+		WriteAgeTree(p->left, fp);
+		WriteAgeTree(p->right, fp);
+		/* fprintf(fp, "%d\t%lf\n", p->index, p->time); */
+		if (p->anc != NULL)
+			fprintf(fp, "%d\t%lf\n", p->index, p->anc->time);
+		/* for the left daughter, age = anc->time (parent continues)
+		 * for the right daughter, age = time (daughter buds off)
+		 */
+		/*
+		if (p->anc != NULL)
+		{
+			// if (p->anc->left->index == p->index)
+			if (p->anc->left == p)
+				fprintf(fp, "%d\t%lf\n", p->index, p->anc->time);
+			else
+				fprintf(fp, "%d\t%lf\n", p->index, p->time);
+		}
+	*/
+	}
+	// FIXME  may need to go back several nodes to get time of origin...
+	// problem: does p->anc get moved upon extinction? lose info if so
+	// 	in BackUp2Regions, don't want option 2
+}

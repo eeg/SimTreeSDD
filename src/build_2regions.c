@@ -185,6 +185,7 @@ void BackUp2Regions(TreeNode *root, TreeNode *here, TreeParams *parameters)
 			here->right = NULL;
 	}
 
+	/*
 	// option 2: if there is only one descendent, collapse the node and back up
 	else if (here->left != NULL && here->right == NULL)
 	{
@@ -207,6 +208,19 @@ void BackUp2Regions(TreeNode *root, TreeNode *here, TreeParams *parameters)
 
 		here = FreeNode(here);
 		node_counter--;
+	}
+	*/
+	else if (here->left != NULL && here->right == NULL)
+	{
+		here->right = NewNode(here, here->time);
+		here->right->trait = here->trait;
+		here = here->anc;
+	}
+	else if (here->left == NULL && here->right != NULL)
+	{
+		here->left = NewNode(here, here->time);
+		here->left->trait = here->trait;
+		here = here->anc;
 	}
 
 	// option 3: if there are two descendents, keep the node and back up
