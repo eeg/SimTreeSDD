@@ -205,6 +205,13 @@ int AcquireTreeParams(struct KeyValue *kv, TreeParams *parameters)
 		parameters->write_ttn = 0;
 	else
 		parameters->write_ttn = 1;
+	
+	// default is not to create ages file
+	parameters->write_ages = getKeyValueint(kv, "write_ages");
+	if (parameters->write_ages <= 0 || parameters->write_ages == KV_INTERR)
+		parameters->write_ages = 0;
+	else
+		parameters->write_ages = 1;
 
 
 	return 0;

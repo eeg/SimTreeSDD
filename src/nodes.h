@@ -33,6 +33,7 @@ typedef struct tnode
 	double time, length;
 	struct tnode *left, *right, *anc;
 	int index, trait;
+	double atime;   // for absolute ages
 	int ptrait;     // for 2regions and allopatric speciation
 } TreeNode;
 

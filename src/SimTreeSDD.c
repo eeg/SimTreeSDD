@@ -117,6 +117,7 @@ int main(int argc, char *argv[])
 		// create the tree root
 		treeRoot = NewNode(NULL, 0);
 		treeRoot->index = 0;
+		treeRoot->atime = 0;
 
 		// assign character state to tree root
 		report = AssignRootState(treeRoot, parameters);
@@ -228,8 +229,8 @@ int main(int argc, char *argv[])
 					if (parameters->write_ttn > 0)
 						WriteTTNFile(treeRoot, temp_prefix);
 
-					// TODO: if this is useful, add a control parameter for it, write_ages
-					WriteAgeFile(treeRoot, temp_prefix);
+					if (parameters->write_ages > 0)
+						WriteAgeFile(treeRoot, temp_prefix, parameters->end_t);
 
 					run_counter++;
 				}

@@ -1,3 +1,7 @@
 add tree+state viewing to ttn.R; then sim trees and test ttn.R
 update webpage
 hyperrefs (internal and external) in manual
+
+enable node absolute ages in 2states (it's now in 2regions)
+
+I suspect ShowRootState isn't really doing the right thing, for 2region at least
