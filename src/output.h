@@ -50,6 +50,7 @@ void WriteNexusFile(TreeNode *p, char *prefix, int n_tips, int states[], TreePar
 void WriteNexusTree(TreeNode *p, FILE *fp);
 void WriteBMSTraitFile(TreeNode *p, char *prefix, int n_tips, int states[]);
 void WriteTTNFile(TreeNode *p, char *prefix);
+void WriteAgeFile(TreeNode *p, char *prefix, double end_t);
 
 
 #endif

@@ -88,12 +88,20 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where,
 		wait_t = 0;
 		todo = Wait2RegionEvent(&where, here->time, &wait_t, parameters);
 
+		if (parameters->verbosity >= 2)
+			printf("todo = %d; here->time = %f, wait_t = %f\n", todo, here->time, wait_t);
+
 		/*****
 		 * If global extinction occurred along that branch, 
 		 *    enter another recursive layer, continuing from the same node.
 		 *****/
 		if (todo == 0)
+		{
+			if (parameters->verbosity >= 2)
+				printf("  extinction: here->time = %f\n", here->time);
+
 			BirthDeath2Regions(root, here, here->trait, ++direction, parameters);
+		}
 
 		/* if there was no birth or death before reaching the stopping time */
 		else if (todo == 4)
@@ -104,9 +112,20 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where,
 			node_counter++;
 
 			if (direction == 0)
+			{
+				// left daughter continues the parent lineage
+				temp->atime = here->atime;
 				here->left = temp;
+			}
 			else
+			{
+				// right daughter buds off the parent lineage
+				temp->atime = here->time;
 				here->right = temp;
+			}
+
+			if (parameters->verbosity >= 2)
+				printf("  tip created: here->time = %f, direction = %d, tip->atime = %f\n", here->time, direction, temp->atime);
 
 			BirthDeath2Regions(root, here, here->trait, ++direction, parameters);
 		}
@@ -142,14 +161,19 @@ void BirthDeath2Regions(TreeNode *root, TreeNode *here, int where,
 
 			if (direction == 0)           // if going left
 			{
+				temp->atime = here->atime;
 				here->left = temp;
 				here = here->left;
 			}
 			else                          // if going right
 			{
+				temp->atime = here->time;
 				here->right = temp;
 				here = here->right;
 			}
+
+			if (parameters->verbosity >= 2)
+				printf("  speciation: here->time = %f, new atime = %f, direction = %d\n", here->time, temp->atime, direction);
 			
 			BirthDeath2Regions(root, here, where, 0, parameters);
 		}
@@ -300,6 +324,9 @@ void BuildTree2Regions(TreeNode *root, TreeParams *parameters)
 
 	todo = Wait2RegionEvent(&where, root->time, &wait_t, parameters);
 
+	if (parameters->verbosity >= 2)
+		printf("todo = %d; root->time = %f, wait_t = %f\n", todo, root->time, wait_t);
+
 	/* if global extinction occurred, don't do anything */
 	if (todo == 0)
 	{}
@@ -309,6 +336,7 @@ void BuildTree2Regions(TreeNode *root, TreeParams *parameters)
 	{
 		temp = NewNode(root, parameters->end_t);
 		temp->trait = where;
+		temp->atime = root->atime;
 		node_counter++;
 
 		root->left = temp;
@@ -335,6 +363,9 @@ void BuildTree2Regions(TreeNode *root, TreeParams *parameters)
 			if (where == 0)
 				root->ptrait = 0;
 		}
+
+		if (parameters->verbosity >= 2)
+			printf("  speciation: root->time = %f, direction = 0, root->atime = %f\n", root->time, root->atime);
 
 		BirthDeath2Regions(root, root, where, 0, parameters);
 	}

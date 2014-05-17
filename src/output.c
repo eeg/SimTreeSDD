@@ -422,3 +422,43 @@ void WriteTTNNodes(TreeNode *p, FILE *fp)
 		}
 	}
 }
+
+/*******************************************************************************
+ * writes the absolute age for each species
+ ******************************************************************************/
+void WriteAgeTree(TreeNode *p, FILE *fp, double end_t);
+void WriteAgeFile(TreeNode *p, char *prefix, double end_t)
+{
+	FILE *fp;
+	char filename[100];
+
+	strcpy(filename, prefix);
+	strcat(filename, ".age");
+
+	fp = fopen(filename, "w");
+
+	if (fp != NULL)
+	{
+		WriteAgeTree(p, fp, end_t);
+		fclose(fp);
+
+		if (verbosity > 0)
+			printf("created file %s\n", filename);
+	}
+	else
+		printf("ERROR: can't open %s for writing\n", filename);
+}
+
+// for use with WriteAgeFile
+void WriteAgeTree(TreeNode *p, FILE *fp, double end_t)
+{
+	if (p != NULL)
+	{
+		WriteAgeTree(p->left, fp, end_t);
+		WriteAgeTree(p->right, fp, end_t);
+		if (p->left == NULL && p->right == NULL)
+		{
+			fprintf(fp, "%d\t%lf\n", p->index, end_t - p->atime);
+		}
+	}
+}

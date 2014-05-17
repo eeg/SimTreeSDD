@@ -6,3 +6,4 @@ src/SimTreeSDD
 *.log
 *.toc
 packaged/
+src/tags

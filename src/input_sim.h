@@ -48,6 +48,7 @@ typedef struct
 	int write_nexus;
 	int write_bmstrait;
 	int write_ttn;
+	int write_ages;
 } TreeParams;
 
 TreeParams *NewTreeParams();

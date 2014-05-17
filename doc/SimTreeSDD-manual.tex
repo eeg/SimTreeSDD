@@ -18,7 +18,7 @@
 \begin{document}
 
 \title{ \Large{ {\bf SimTreeSDD}: {\bf Sim}ulating Phylogenetic {\bf Tree}s Under \\ {\bf S}tate-{\bf D}ependent {\bf D}iversification } }
-\author{ \large{Emma E.\ Goldberg} \\ \normalsize{\texttt{eeg@uic.edu}} }
+\author{ \large{Emma E.\ Goldberg} \\ \normalsize{\texttt{eeg@umn.edu}} }
 \maketitle
 
 \tableofcontents
@@ -75,6 +75,36 @@ The simulations are carried out in continuous time, and the results can be writt
 The program is called from the command line, so it is easy to automate it to produce many trees organized however you like.
 It is quite fast: performance obviously depends on hardware and parameter values, but I have never waited more than a couple seconds for a batch of thousands of reasonably large trees.
 
+\subsection*{History}
+\addcontentsline{toc}{subsection}{History}
+
+The first version of this code was a simple birth-death simulator written in 2003 for a phylogenetics class.
+I added the trait-dependent aspects a few years later.
+Older versions along the way (see the \texttt{git} history) have included MCMC and likelihood maximization routines for parameter estimation.
+The focus now, however, is simply fast simulation of trees.
+
+\texttt{SimTreeSDD} has been used in at least these publications:
+
+Huang, D., E.E.~Goldberg, D.~Jablonski, and K.~Roy.
+(in review).
+Fossils, phylogenies, and the challenge of preserving evolutionary history in   the face of anthropogenic extinctions.
+
+Huang, D., E.E.~Goldberg, L.M.~Chou, and K.~Roy.
+(in review).
+The origin and evolution of reef coral richness in a marine biodiversity hotspot.
+
+Goldberg, E.E., L.T.~Lancaster, and R.H.~Ree. 2011.
+Phylogenetic inference of reciprocal effects between geographic range evolution and diversification.
+{\em Systematic Biology} 60:451--465.
+
+Goldberg, E.E$\stackrel{^\ast}{\mbox{.}}$ and B.~Igi\'c$\stackrel{^\ast}{\mbox{.}}$ 2008.
+On phylogenetic tests of irreversible evolution.
+{\em Evolution} 62:$\,$2727--2741.
+
+Roy, K$\stackrel{^\ast}{\mbox{.}}$ and E.E.~Goldberg$\stackrel{^\ast}{\mbox{.}}$ 2007.
+Origination, extinction and dispersal: integrative models for understanding     present-day diversity gradients.
+{\em The American Naturalist} 170:$\,$S71--S85.
+
 
 \section*{How to use the program}
 \addcontentsline{toc}{section}{How to use the program}
@@ -97,7 +127,7 @@ and the contents of input or output files are displayed like this:
 \subsection*{Installation}
 \addcontentsline{toc}{subsection}{Installation}
 
-\texttt{SimTreeSDD} is available as C source code, so first download \texttt{SimTreeSDD-xxx.tar.gz} from my website (currently \url{http://www.uic.edu/~eeg}; \texttt{xxx} is the date).
+\texttt{SimTreeSDD} is available as C source code, so first download \texttt{SimTreeSDD-xxx.tar.gz} from my website (currently \url{http://www.umn.edu/~eeg}; \texttt{xxx} is the date).
 Put this archive wherever you like and navigate there in the terminal.
 Then, unpack the files and compile the code:
 \begin{commandis}
@@ -237,6 +267,11 @@ Here is a complete list of options and their possible values:
 		\begin{valdescrip}
 			\item[0] don't create a \texttt{.ttn} file for each tree [default]
 			\item[1] do create a \texttt{.ttn} file for each tree
+		\end{valdescrip}
+	\item[write\_ages] create an output file containing the ``absolute'' or stratigraphic age of each surviving species; this is measured from the time of the budding speciation event that gave rise to the lineage and is unaffected by daughter lineages it subsequently produced
+		\begin{valdescrip}
+			\item[0] don't create a \texttt{.age} file for each tree [default]
+			\item[1] do create a \texttt{.age} file for each tree
 		\end{valdescrip}
 \end{optdescrip}
 
