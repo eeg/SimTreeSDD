@@ -1,5 +1,10 @@
+SimTreeSDD
+Fast simulation of phylogenetic trees under state-dependent diversification.
+
 Emma Goldberg
-eeg@umn.edu, www.umn.edu/~eeg
+eeg@umn.edu, http://www.umn.edu/~eeg
+
+Latest release: 18 May 2014
 
 BUILD
 	cd src/
